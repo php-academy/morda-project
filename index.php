@@ -1,13 +1,19 @@
+<?php
+require(__DIR__ . '/data/project_functions.php');
+$cities = require(__DIR__ . '/data/dbCity.php');
+
+$currentCity = get_curr_city();
+set_curr_city($currentCity);
+?>
 <!DOCTYPE html>
 <html>
     <head>
         <title>Morda</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https//code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <meta charset="UTF-8">
         <style>
-            .w100 { width: 100px;}
             .bt { border-top: 1px solid;}
         </style>
     </head>
@@ -15,10 +21,18 @@
         <div class="container">
             <div class="row">
                 <div class="btn-group btn-group-justified">
-                    <a href="#" class="btn btn-primary">Барнаул</a>
-                    <a href="#" class="btn btn-primary">Красноярск</a>
-                    <a href="#" class="btn btn-primary disabled">Новосибирск</a>
-                    <a href="#" class="btn btn-primary">Томск</a>
+                    <?php
+                    foreach( $cities as $cityData ) {
+                        if( $currentCity == $cityData['code'] ) {
+                            $disabled = 'disabled';
+                        } else {
+                            $disabled = '';
+                        }
+                        ?>
+                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <?php
+                    }
+                    ?>
                 </div>
             </div>
             <br>
@@ -82,7 +96,11 @@
             <br>
             <div class="row bt">
                 <br>
-                &copy; 2015 Morda inc.
+                <?
+                date_default_timezone_set('America/Los_Angeles');
+                ?>
+                &copy; <?=date('Y'); ?> Morda inc.
+                <br>
             </div>
         </div>
     </body>
