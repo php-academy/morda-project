@@ -99,7 +99,8 @@ set_curr_city($currentCity);
                 <?
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
-                &copy; <?=date('Y'); ?> Morda inc. by Ivan
+                &copy; <?=date('Y'); ?> Morda inc. by Boris
+
                 <br>
             </div>
         </div>
