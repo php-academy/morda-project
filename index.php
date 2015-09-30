@@ -78,18 +78,23 @@ set_curr_city($currentCity);
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
+                    <?
+                    foreach($dbCity as $city){
+                        foreach($dbAuto as $auto){
+                            if($city['code']==$auto['cityCode']){
+                                ?>
+                                <tr>
+                                    <td><?=$auto['model']['name']?></td>
+                                    <td><?=$auto['model']['year']?></td>
+                                    <td><?=$auto['model']['power']?> л.c.</td>
+                                    <td><?=$auto['model']['run']?></td>
+                                    <td><?=$auto['price']['value']?> руб.<br>Новосибирск</td>
+                                </tr>
+                                <?
+                            }
+                        }
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>
