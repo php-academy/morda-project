@@ -102,11 +102,13 @@ function filter($dbAuto,$cities,$currentCity,$needDistance=500,$is4wd=true,$isAu
 }
 print_r(filter($dbAuto,$dbCity,'tsk',600,true,false));
 
-function distance_cities($cities,$currentCity,$needDistance){
-    $ar_city=array();
-    foreach($cities as $name){
-        if(calculateTheDistance ($cities,$currentCity,$name)<= $needDistance){
-            $ar_city = $name;        }
-    }
+function distance_cities($cities,$currentCity,$needDistance)
+{
+    $ar_city = array();
+    foreach ($cities as $name) {
+        if (calculateTheDistance($cities, $currentCity, $name) <= $needDistance) {
+            $ar_city = $name;
+        }
     }
     return $ar_city;
+}
