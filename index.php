@@ -15,6 +15,7 @@ set_curr_city($currentCity);
         <meta charset="UTF-8">
         <style>
             .bt { border-top: 1px solid;}
+            .ar { text-align: right;}
         </style>
     </head>
     <body>
@@ -37,37 +38,66 @@ set_curr_city($currentCity);
             </div>
             <br>
             <div class="row">
-                <form >
-                    <fieldset>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Цена:</label>
-                            <input placeholder="цена от" class="form-control">
-                            -
-                            <input placeholder="цена до" class="form-control">
-                        </div>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Год:</label>
-                            <input placeholder="год от" class="form-control">
-                            -
-                            <input placeholder="год до" class="form-control">
-                        </div>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                            <input placeholder="расстояние" class="form-control">
-                        </div>
-                        <div class="checkbox">
-                            <div class="col-sm-2"></div>
-                            <label><input type="checkbox">Автомат</label>
-                        </div>
-                        <div class="checkbox">
-                            <div class="col-sm-2"></div>
-                            <label><input type="checkbox">4WD</label>
-                        </div>
-                        <div class="form-group form-inline">
-                            <button type="submit" class="btn btn-default">Найти</button>
-                        </div>
-                    </fieldset>
-                </form>
+                <div class="col-xs-9">
+                    <form >
+                        <fieldset>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Цена:</label>
+                                <input placeholder="цена от" class="form-control">
+                                -
+                                <input placeholder="цена до" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Год:</label>
+                                <input placeholder="год от" class="form-control">
+                                -
+                                <input placeholder="год до" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Расстояние от меня:</label>
+                                <input placeholder="расстояние" class="form-control">
+                            </div>
+                            <div class="checkbox">
+                                <div class="col-sm-2"></div>
+                                <label><input type="checkbox">Автомат</label>
+                            </div>
+                            <div class="checkbox">
+                                <div class="col-sm-2"></div>
+                                <label><input type="checkbox">4WD</label>
+                            </div>
+                            <div class="form-group form-inline">
+                                <button type="submit" class="btn btn-default">Найти</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="col-xs-3 ar">
+                    <!-- Not authorized user -->
+                    <form>
+                        <fieldset>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-4 control-label"> Логин:</label>
+                                <input placeholder="Логин" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-4 control-label">Пароль:</label>
+                                <input placeholder="Пароль" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-sm-4"></div>
+                                <button type="submit" class="btn btn-default">Войти</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <!-- Not authorized user -->
+
+                    <!-- Authorized user -->
+                    <i href="#" class="glyphicon glyphicon-user"> Username</i>
+                    <br>
+                    <a href="#">Выход</a>
+                    <!-- Authorized user -->
+
+                </div>
             </div>
             <br>
             <div class="row">
