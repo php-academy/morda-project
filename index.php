@@ -1,8 +1,11 @@
-<?php
+﻿<?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
+$autos = require(__DIR__ . '/data/dbAuto.php');
+
 
 $currentCity = get_curr_city();
+var_dump($currentCity);
 set_curr_city($currentCity);
 ?>
 <!DOCTYPE html>
@@ -11,9 +14,10 @@ set_curr_city($currentCity);
         <title>Morda</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https//code.jquery.com/jquery-1.11.3.min.js"></script>
         <meta charset="UTF-8">
         <style>
+            .w100 { width: 100px;}
             .bt { border-top: 1px solid;}
         </style>
     </head>
@@ -37,19 +41,19 @@ set_curr_city($currentCity);
             </div>
             <br>
             <div class="row">
-                <form >
+                <form action="data/forma.php" name="myform" method="post" >
                     <fieldset>
                         <div class="form-group form-inline">
                             <label class="col-sm-2 control-label">Цена:</label>
-                            <input placeholder="цена от" class="form-control">
+                            <input name="s_ot" placeholder="цена от" class="form-control">
                             -
-                            <input placeholder="цена до" class="form-control">
+                            <input name="s_do" placeholder="цена до" class="form-control">
                         </div>
                         <div class="form-group form-inline">
                             <label class="col-sm-2 control-label">Год:</label>
-                            <input placeholder="год от" class="form-control">
+                            <input name="g_ot" placeholder="год от" class="form-control">
                             -
-                            <input placeholder="год до" class="form-control">
+                            <input name="g_do" placeholder="год до" class="form-control">
                         </div>
                         <div class="form-group form-inline">
                             <label class="col-sm-2 control-label">Расстояние от меня:</label>
@@ -78,18 +82,26 @@ set_curr_city($currentCity);
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
+                    <?php
+                    
+                        foreach ($autos as $avto_info_all) {
+                            foreach ($avto_info_all as $avto_info)
+                                $s = $avto_info_all['model']; // подмассив "Модель"
+                                $d = $avto_info_all['price']; // подмассив "Прайс"
+                                foreach( $cities as $cityData )
+                                    if ($currentCity == $cityData['code']) {
+                                        $e = $cityData['name'];                                    
+                                    }                                                                                                 
+                                if ($avto_info === $currentCity) 
+
+                                    echo "<tr>
+                                            <td>{$s['name']}</td><td>{$s['year']}</td><td>{$s['power']}</td><td>{$s['run']}</td><td>{$d['value']} {$d['currency']}<br>{$e}</td>
+                                         </tr>";
+                                    }
+                            
+                        
+                        
+                    ?>
                     </tbody>
                 </table>
             </div>
