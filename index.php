@@ -1,9 +1,13 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
+$autos  = require(__DIR__ . '/data/dbAuto.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+
+$autos = filter($autos, $currentCity);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,11 +27,7 @@ set_curr_city($currentCity);
                 <div class="btn-group btn-group-justified">
                     <?php
                     foreach( $cities as $cityData ) {
-                        if( $currentCity == $cityData['code'] ) {
-                            $disabled = 'disabled';
-                        } else {
-                            $disabled = '';
-                        }
+                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
                         ?>
                         <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
                         <?php
@@ -78,18 +78,11 @@ set_curr_city($currentCity);
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
+                    <?php
+                    foreach( $autos as $autoData ) {
+                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td><?php
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>
@@ -99,10 +92,9 @@ set_curr_city($currentCity);
                 <?
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
-                &copy; <?=date('Y'); ?> Morda inc. by Boris
-
-                <br>
+                &copy; <?=date('Y'); ?> Morda inc. by nasedkin
             </div>
+            <br>
         </div>
     </body>
 </html>
