@@ -100,7 +100,6 @@ function filter($dbAuto,$cities,$currentCity,$needDistance=500,$is4wd=true,$isAu
     }
     return $ar_auto;
 }
-print_r(filter($dbAuto,$dbCity,'tsk',600,true,false));
 
 function distance_cities($cities,$currentCity,$needDistance)
 {

@@ -2,9 +2,25 @@
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $dbAuto = require(__DIR__ . '/data/dbAuto.php');
+$users = require(__DIR__ . '/data/dbUsers.php');
+
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+$isUserAuth = false;
+if( isset($_COOKIE['user'])){
+    $userCookie = $_COOKIE['user'];
+    $arUserCookie = explode(':',$userCookie);
+    $login = $arUserCookie[0];
+    $md5Password = $arUserCookie[1];
+
+    if(isset($users[$login])){
+        $password = $users[$login]['password'];
+        if(md5($password) == $md5Password){
+            $isUserAuth = true;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,16 +89,17 @@ set_curr_city($currentCity);
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
+                    <?php if(!$isUserAuth){?>
                     <!-- Not authorized user -->
-                    <form>
+                    <form action="/auth.php" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
-                                <input placeholder="Логин" class="form-control">
+                                <input name="login" placeholder="Логин" class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label">Пароль:</label>
-                                <input placeholder="Пароль" class="form-control">
+                                <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
@@ -91,13 +108,13 @@ set_curr_city($currentCity);
                         </fieldset>
                     </form>
                     <!-- Not authorized user -->
-
+                    <?php } else {?>
                     <!-- Authorized user -->
-                    <i href="#" class="glyphicon glyphicon-user"> Username</i>
+                    <i class="glyphicon glyphicon-user"><?=$login?></i>
                     <br>
                     <a href="#">Выход</a>
                     <!-- Authorized user -->
-
+                    <?php } ?>
                 </div>
             </div>
             <br>
