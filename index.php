@@ -1,7 +1,7 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-$ads = require(__DIR__ . '/data/dbData.php'); # Массив с объявлениями.
+$ads = require(__DIR__ . '/data/dbAuto.php'); # Массив с объявлениями.
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 ?>
@@ -78,18 +78,31 @@ set_curr_city($currentCity);
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
+                    <?php
+                    foreach ($ads as $key => $carData) {
+                        if ($carData['cityCode'] == $currentCity) { # Если город в объявлении совпадает с текущим городом...
+                            // ...выбираем из этого объявления всю нужную информацию:
+                            $city = $cities["$currentCity"]['name'];
+                            $modelName = $carData['model']['name'];
+                            $modelYear = $carData['model']['year'];
+                            $modelRun = $carData['model']['run'];
+                            $modelPower = $carData['model']['power'];
+                            $modelIsAutoTrans = $carData['model']['isAutoTrans'];
+                            $priceValue = $carData['price']['value'];
+                            $priceCurrency = $carData['price']['currency'];
+                            // Выводим в табличку:
+                            ?>
+                            <tr>
+                                <td><?=$modelName;?></td>
+                                <td><?=$modelYear;?></td>
+                                <td><?=$modelPower;?></td>
+                                <td><?=$modelRun;?></td>
+                                <td><?=$priceValue;?> <?=$priceCurrency;?><br><?=$city;?></td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>
