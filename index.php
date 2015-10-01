@@ -29,7 +29,7 @@ set_curr_city($currentCity);
                             $disabled = '';
                         }
                         ?>
-                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <a href="./?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
                         <?php
                     }
                     ?>
