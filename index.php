@@ -1,7 +1,7 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-
+$ads = require(__DIR__ . '/data/dbData.php'); # Массив с объявлениями.
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 ?>
