@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="197309ef-6f66-476e-8f2e-a1af24872457" name="Default" comment="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;Conflicts:&#10;&#9;index.php&#10;">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+    <list default="true" id="197309ef-6f66-476e-8f2e-a1af24872457" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="morda-project.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +27,7 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.09652928">
+            <state vertical-scroll-proportion="0.096045196">
               <caret line="8" column="6" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="6" />
               <folding />
             </state>
@@ -209,7 +209,13 @@
       <option name="project" value="LOCAL" />
       <updated>1443780168779</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;Conflicts:&#10;&#9;index.php&#10;">
+      <created>1443780555635</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1443780555635</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -225,7 +231,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.09186603" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.06602871" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.10143541" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -252,7 +258,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;" />
     <MESSAGE value="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;" />
+    <MESSAGE value="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;Conflicts:&#10;&#9;index.php&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'nasedkin' of https://github.com/php-academy/morda-project into shvetsov3&#10;&#10;Conflicts:&#10;&#9;index.php&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -325,7 +332,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09652928">
+        <state vertical-scroll-proportion="0.096045196">
           <caret line="8" column="6" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="6" />
           <folding />
         </state>
