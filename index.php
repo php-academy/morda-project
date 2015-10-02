@@ -2,8 +2,21 @@
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $ads = require(__DIR__ . '/data/dbAuto.php'); # Массив с объявлениями.
+$users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользователями.
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+
+$isUserAuth = false;
+if ( isset($_COOKIE['user']) ) {
+    $userCookie = $_COOKIE['user'];    
+    $arUserCookie = explode(':', $userCookie);
+    $login = $arUserCookie[0];
+    $md5password = $arUserCookie[1];
+    # Проверяем соответствие логина и пароля из куки с масивом пользователей:
+    if ( isset($users[$login]) && ($md5password == md5($users[$login]['password'])) ) {
+        $isUserAuth = true;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,7 +43,7 @@ set_curr_city($currentCity);
                             $disabled = '';
                         }
                         ?>
-                        <a href="./?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
                         <?php
                     }
                     ?>
@@ -73,15 +86,17 @@ set_curr_city($currentCity);
                 </div>
                 <div class="col-xs-3 ar">
                     <!-- Not authorized user -->
-                    <form>
+                    <?php if(!$isUserAuth)
+                    { ?>
+                    <form action="auth.php" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
-                                <input placeholder="Логин" class="form-control">
+                                <input name="login" placeholder="Логин" class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label">Пароль:</label>
-                                <input placeholder="Пароль" class="form-control">
+                                <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
@@ -91,12 +106,13 @@ set_curr_city($currentCity);
                     </form>
                     <!-- Not authorized user -->
 
+                    <?php } else { ?>
                     <!-- Authorized user -->
-                    <i href="#" class="glyphicon glyphicon-user"> Username</i>
+                    <i href="#" class="glyphicon glyphicon-user"> <?=$login;?></i>
                     <br>
-                    <a href="#">Выход</a>
+                    <a href="/auth.php?action=logout">Выход</a>
                     <!-- Authorized user -->
-
+                    <?php } ?>
                 </div>
             </div>
             <br>
