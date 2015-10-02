@@ -1,9 +1,13 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
+$autos  = require(__DIR__ . '/data/dbAuto.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+
+$autos = filter($autos, $currentCity);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,6 +19,7 @@ set_curr_city($currentCity);
         <meta charset="UTF-8">
         <style>
             .bt { border-top: 1px solid;}
+            .ar { text-align: right;}
         </style>
     </head>
     <body>
@@ -23,11 +28,7 @@ set_curr_city($currentCity);
                 <div class="btn-group btn-group-justified">
                     <?php
                     foreach( $cities as $cityData ) {
-                        if( $currentCity == $cityData['code'] ) {
-                            $disabled = 'disabled';
-                        } else {
-                            $disabled = '';
-                        }
+                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
                         ?>
                         <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
                         <?php
@@ -37,37 +38,66 @@ set_curr_city($currentCity);
             </div>
             <br>
             <div class="row">
-                <form >
-                    <fieldset>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Цена:</label>
-                            <input placeholder="цена от" class="form-control">
-                            -
-                            <input placeholder="цена до" class="form-control">
-                        </div>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Год:</label>
-                            <input placeholder="год от" class="form-control">
-                            -
-                            <input placeholder="год до" class="form-control">
-                        </div>
-                        <div class="form-group form-inline">
-                            <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                            <input placeholder="расстояние" class="form-control">
-                        </div>
-                        <div class="checkbox">
-                            <div class="col-sm-2"></div>
-                            <label><input type="checkbox">Автомат</label>
-                        </div>
-                        <div class="checkbox">
-                            <div class="col-sm-2"></div>
-                            <label><input type="checkbox">4WD</label>
-                        </div>
-                        <div class="form-group form-inline">
-                            <button type="submit" class="btn btn-default">Найти</button>
-                        </div>
-                    </fieldset>
-                </form>
+                <div class="col-xs-9">
+                    <form >
+                        <fieldset>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Цена:</label>
+                                <input placeholder="цена от" class="form-control">
+                                -
+                                <input placeholder="цена до" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Год:</label>
+                                <input placeholder="год от" class="form-control">
+                                -
+                                <input placeholder="год до" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-2 control-label">Расстояние от меня:</label>
+                                <input placeholder="расстояние" class="form-control">
+                            </div>
+                            <div class="checkbox">
+                                <div class="col-sm-2"></div>
+                                <label><input type="checkbox">Автомат</label>
+                            </div>
+                            <div class="checkbox">
+                                <div class="col-sm-2"></div>
+                                <label><input type="checkbox">4WD</label>
+                            </div>
+                            <div class="form-group form-inline">
+                                <button type="submit" class="btn btn-default">Найти</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="col-xs-3 ar">
+                    <!-- Not authorized user -->
+                    <form>
+                        <fieldset>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-4 control-label"> Логин:</label>
+                                <input placeholder="Логин" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label class="col-sm-4 control-label">Пароль:</label>
+                                <input placeholder="Пароль" class="form-control">
+                            </div>
+                            <div class="form-group form-inline">
+                                <div class="col-sm-4"></div>
+                                <button type="submit" class="btn btn-default">Войти</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <!-- Not authorized user -->
+
+                    <!-- Authorized user -->
+                    <i href="#" class="glyphicon glyphicon-user"> Username</i>
+                    <br>
+                    <a href="#">Выход</a>
+                    <!-- Authorized user -->
+
+                </div>
             </div>
             <br>
             <div class="row">
@@ -78,21 +108,9 @@ set_curr_city($currentCity);
                     </tr>
                     </thead>
                     <tbody>
-                    <?
-                    foreach($dbCity as $city){
-                        foreach($dbAuto as $auto){
-                            if($city['code']==$auto['cityCode']){
-                                ?>
-                                <tr>
-                                    <td><?=$auto['model']['name']?></td>
-                                    <td><?=$auto['model']['year']?></td>
-                                    <td><?=$auto['model']['power']?> л.c.</td>
-                                    <td><?=$auto['model']['run']?></td>
-                                    <td><?=$auto['price']['value']?> руб.<br>Новосибирск</td>
-                                </tr>
-                                <?
-                            }
-                        }
+                    <?php
+                    foreach( $autos as $autoData ) {
+                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td><?php
                     }
                     ?>
                     </tbody>
@@ -104,10 +122,9 @@ set_curr_city($currentCity);
                 <?
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
-                &copy; <?=date('Y'); ?> Morda inc. by Boris
-
-                <br>
+                &copy; <?=date('Y'); ?> Morda inc. by nasedkin
             </div>
+            <br>
         </div>
     </body>
 </html>
