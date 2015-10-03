@@ -4,7 +4,7 @@ session_start();
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
-$users = require( __DIR__ . '/data/dbUsers.php');
+$users = require( __DIR__ . '/data/dbusers.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
