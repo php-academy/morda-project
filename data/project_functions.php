@@ -50,3 +50,74 @@ function filter($dbAuto, $currCity) {
     }
     return $result;
 }
+
+function get_user_by_login($login) {
+    $users = require(__DIR__.'/dbUsers.php');
+    if( isset($users[$login]) ) {
+        return $users[$login];
+    } else {
+        return false;
+    }
+}
+
+function login() {
+
+    if( isset($_POST['login']) && isset($_POST['password']) ) {
+        $login = $_POST['login'];
+        $password = $_POST['password'];
+
+        if (
+            preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+            preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+        ) {
+            if (
+                $user = get_user_by_login($login)
+            ) {
+                if( $user['salt_password'] == md5($password . $user['salt']) ) {
+                    $hash = cookie_hash(
+                        $user['salt_password'] ,
+                        $user['salt']
+                    );
+
+                    setcookie("user", $login . ':' . $hash, time() + 60 * 60 * 24 * 30, '/');
+                }
+            }
+        }
+    }
+}
+
+function authorize() {
+
+    if( isset($_COOKIE['user']) ) {
+        $userCookie = $_COOKIE['user'];
+        $arUserCookie = explode(':', $userCookie);
+        $login = $arUserCookie[0];
+        $cookieHash = $arUserCookie[1];
+
+        if( $user = get_user_by_login($login) ) {
+            $userHash =  cookie_hash(
+                $user['salt_password'] ,
+                $user['salt']
+            );
+
+            if( $userHash == $cookieHash ) {
+                return $login;
+            }
+        }
+    }
+    return false;
+}
+
+function logout() {
+    setcookie('user', '', time() - 60*60*24, '/');
+}
+
+function cookie_hash($saltPassword, $salt) {
+    return md5(
+        $_SERVER['REMOTE_ADDR'] .
+        $_SERVER['HTTP_USER_AGENT'] .
+        date('Y-m-d') .
+        $saltPassword .
+        $salt
+    );
+}

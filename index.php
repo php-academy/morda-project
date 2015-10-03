@@ -9,31 +9,7 @@ $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
 $autos = filter($autos, $currentCity);
-
-
-$isUserAuth = false;
-if( isset($_COOKIE['user']) ) {
-    $userCookie = $_COOKIE['user'];
-    $arUserCookie = explode(':', $userCookie);
-    $login = $arUserCookie[0];
-    $cookieHash = $arUserCookie[1];
-
-    if( isset($users[$login]) ) {
-        $users[$login]['password'];
-        $userHash =  md5(
-            $_SERVER['REMOTE_ADDR'] .
-            $_SERVER['HTTP_USER_AGENT'] .
-            date('Y-m-d') .
-            $users[$login]['salt_password'] .
-            $users[$login]['salt']
-        );
-
-        if( $userHash == $cookieHash ) {
-            $isUserAuth = true;
-        }
-    }
-}
-
+$login = authorize();
 
 ?>
 <!DOCTYPE html>
@@ -99,7 +75,7 @@ if( isset($_COOKIE['user']) ) {
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isUserAuth) { ?>
+                    <?php if(!$login) { ?>
                     <!-- Not authorized user -->
                     <form action="/auth.php?action=login" method="post">
                         <fieldset>
