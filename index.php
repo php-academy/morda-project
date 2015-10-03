@@ -92,7 +92,7 @@ if( isset($_COOKIE['user']) ) {
                 <div class="col-xs-3 ar">
                     <?php if(!$isUserAuth) { ?>
                     <!-- Not authorized user -->
-                    <form action="/auth.php" method="post">
+                    <form action="/auth.php?action=login" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
@@ -113,7 +113,7 @@ if( isset($_COOKIE['user']) ) {
                     <!-- Authorized user -->
                     <i class="glyphicon glyphicon-user"> <?=$login?></i>
                     <br>
-                    <a href="#">Выход</a>
+                    <a href="/auth.php?action=logout">Выход</a>
                     <!-- Authorized user -->
                     <?php } ?>
                 </div>
