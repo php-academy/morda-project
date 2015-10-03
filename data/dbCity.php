@@ -8,7 +8,7 @@
 return array(
     'nsk' => array(
         'code'  => 'nsk',
-        'name'  => 'Novosibitsk',
+        'name'  => 'Novosibirsk',
         'coord' => array(
             'latitude'  => 55.1,
             'longitude' => 82.55,

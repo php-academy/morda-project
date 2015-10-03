@@ -62,7 +62,7 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
     return $dist;
 }
 
-
+/*
 function filter($dbAuto,$cities,$currentCity,$needDistance=500,$is4wd=true,$isAutoTrans=true){
 
     $ar_city=array();
@@ -100,7 +100,7 @@ function filter($dbAuto,$cities,$currentCity,$needDistance=500,$is4wd=true,$isAu
     }
     return $ar_auto;
 }
-
+*/
 function distance_cities($cities,$currentCity,$needDistance)
 {
     $ar_city = array();
@@ -110,4 +110,12 @@ function distance_cities($cities,$currentCity,$needDistance)
         }
     }
     return $ar_city;
+function filter($dbAuto, $currCity) {
+        $result = array();
+        foreach($dbAuto as $autoData) {
+                if( $autoData['cityCode'] == $currCity ) {
+                        $result[] = $autoData;
+                    }
+    }
+    return $result;
 }

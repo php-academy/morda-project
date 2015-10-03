@@ -22,6 +22,7 @@ return array(
         ),
         'cityCode' => 'nsk',
     ),
+
     array(
         'model' => array(
             'name'  		=> 'Nissan March',

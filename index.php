@@ -1,12 +1,11 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-$dbAuto = require(__DIR__ . '/data/dbAuto.php');
+$autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
-
-
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+$autos = filter($autos,$currentCity);
 $isUserAuth = false;
 if( isset($_COOKIE['user'])){
     $userCookie = $_COOKIE['user'];
@@ -41,11 +40,7 @@ if( isset($_COOKIE['user'])){
                 <div class="btn-group btn-group-justified">
                     <?php
                     foreach( $cities as $cityData ) {
-                        if( $currentCity == $cityData['code'] ) {
-                            $disabled = 'disabled';
-                        } else {
-                            $disabled = '';
-                        }
+                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
                         ?>
                         <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
                         <?php
@@ -56,31 +51,31 @@ if( isset($_COOKIE['user'])){
             <br>
             <div class="row">
                 <div class="col-xs-9">
-                    <form >
+                    <form action="/filter.php" method="post" >
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>
-                                <input placeholder="цена от" class="form-control">
+                                <input name="price_ot" placeholder="цена от тыс. руб." class="form-control">
                                 -
-                                <input placeholder="цена до" class="form-control">
+                                <input name="price_do" placeholder="цена до тыс. руб." class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Год:</label>
-                                <input placeholder="год от" class="form-control">
+                                <input name="year_ot" placeholder="год от" class="form-control">
                                 -
-                                <input placeholder="год до" class="form-control">
+                                <input name="year_do" placeholder="год до" class="form-control">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                                <input placeholder="расстояние" class="form-control">
+                                <input name="distance" placeholder="расстояние" class="form-control">
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox">Автомат</label>
+                                <label><input name="isAutoTrans" type="checkbox">Автомат</label>
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox">4WD</label>
+                                <label><input name="is4wd" type="checkbox">4WD</label>
                             </div>
                             <div class="form-group form-inline">
                                 <button type="submit" class="btn btn-default">Найти</button>
@@ -112,7 +107,7 @@ if( isset($_COOKIE['user'])){
                     <!-- Authorized user -->
                     <i class="glyphicon glyphicon-user"><?=$login?></i>
                     <br>
-                    <a href="#">Выход</a>
+                    <a href="/logout.php">Выход</a>
                     <!-- Authorized user -->
                     <?php } ?>
                 </div>
@@ -126,18 +121,12 @@ if( isset($_COOKIE['user'])){
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
-                    <tr>
-                        <td>Toyota Noah</td><td>2009</td><td>143 л.c.</td><td>45</td><td>750 000 руб.<br>Новосибирск</td>
-                    </tr>
+                    <?php
+
+                    foreach($autos as $autodata){
+                        ?><td><?=$autodata['model']['name']?></td><td><?=$autodata['model']['year']?></td><td><?=$autodata['model']['power']?>л.с.</td><td><?=$autodata['model']['run']?>км</td><td><?=$autodata['price']['value']?>руб.<br><?=$cities[$autodata['cityCode']]['name']?></td><?php
+                    }
+                    ?>
                     </tbody>
                 </table>
             </div>
@@ -147,7 +136,7 @@ if( isset($_COOKIE['user'])){
                 <?
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
-                &copy; <?=date('Y'); ?> Morda inc. by Boris
+                &copy; <?=date('Y'); ?> Morda inc. by Ivan
 
                 <br>
             </div>
