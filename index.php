@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Los_Angeles');
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
@@ -15,11 +16,19 @@ if( isset($_COOKIE['user']) ) {
     $userCookie = $_COOKIE['user'];
     $arUserCookie = explode(':', $userCookie);
     $login = $arUserCookie[0];
-    $md5password = $arUserCookie[1];
+    $cookieHash = $arUserCookie[1];
 
     if( isset($users[$login]) ) {
-        $password = $users[$login]['password'];
-        if( md5($password) == $md5password ) {
+        $users[$login]['password'];
+        $userHash =  md5(
+            $_SERVER['REMOTE_ADDR'] .
+            $_SERVER['HTTP_USER_AGENT'] .
+            date('Y-m-d') .
+            $users[$login]['salt_password'] .
+            $users[$login]['salt']
+        );
+
+        if( $userHash == $cookieHash ) {
             $isUserAuth = true;
         }
     }
