@@ -1,21 +1,16 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
+session_start();
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-
 $autos  = require(__DIR__ . '/data/dbAuto.php');
+$users = require( __DIR__ . '/data/dbUsers.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos, $currentCity);
-
-
-//$dbAuto = require(__DIR__ . '/data/dbAuto.php');
-//$users = require(__DIR__ . '/data/dbUsers.php');
-
-
-$currentCity = get_curr_city();
-set_curr_city($currentCity);
+$autos = filter($autos,$cities,$currentCity);
+//print_r($autos);
 
 $isUserAuth = false;
 if( isset($_COOKIE['user'])){
@@ -28,8 +23,21 @@ if( isset($_COOKIE['user'])){
         $password = $users[$login]['password'];
         if(md5($password) == $md5Password){
             $isUserAuth = true;
+            unset($_SESSION['error']);
         }
     }
+}
+
+if( isset($_GET['logout']) ) {
+    if($_GET['logout']==1){
+        setcookie( "user", $login. ':'. md5($password), time(), '/');
+        $isUserAuth=false;
+    }
+}
+
+if(isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    $is_error = true;
 }
 
 ?>
@@ -44,6 +52,7 @@ if( isset($_COOKIE['user'])){
         <style>
             .bt { border-top: 1px solid;}
             .ar { text-align: right;}
+            .error{ color:red;}
         </style>
     </head>
     <body>
@@ -100,6 +109,13 @@ if( isset($_COOKIE['user'])){
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
+                            <?php if($is_error){?>
+                                <div>
+                                    <label class="error">
+                                        <?=$error?>
+                                    </label>
+                                </div>
+                            <?php } ?>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
                                 <input name="login" placeholder="Логин" class="form-control">
@@ -119,7 +135,7 @@ if( isset($_COOKIE['user'])){
                     <!-- Authorized user -->
                     <i class="glyphicon glyphicon-user"><?=$login?></i>
                     <br>
-                    <a href="#">Выход</a>
+                    <a href="/?logout=1">Выход</a>
                     <!-- Authorized user -->
                     <?php } ?>
                 </div>
@@ -135,7 +151,15 @@ if( isset($_COOKIE['user'])){
                     <tbody>
                     <?php
                     foreach( $autos as $autoData ) {
-                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td><?php
+                        ?>
+                        <tr>
+                            <td><?=$autoData['model']['name']?></td>
+                            <td><?=$autoData['model']['year']?></td>
+                            <td><?=$autoData['model']['power']?> л.c.</td>
+                            <td><?=$autoData['model']['run']?></td>
+                            <td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td>
+                        </tr>
+                        <?php
                     }
                     ?>
                     </tbody>
