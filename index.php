@@ -23,7 +23,6 @@ if( isset($_COOKIE['user'])){
         $password = $users[$login]['password'];
         if(md5($password) == $md5Password){
             $isUserAuth = true;
-            unset($_SESSION['error']);
         }
     }
 }
@@ -39,6 +38,11 @@ if(isset($_SESSION['error'])) {
     $error = $_SESSION['error'];
     $is_error = true;
 }
+
+if(!isset($_POST['login']) && !isset($_POST['password'])){
+   unset($_SESSION['error']);
+}
+
 
 ?>
 <!DOCTYPE html>
