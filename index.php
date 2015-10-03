@@ -1,14 +1,12 @@
 <?php
 date_default_timezone_set('America/Los_Angeles');
 require(__DIR__ . '/data/project_functions.php');
-$cities = require(__DIR__ . '/data/dbCity.php');
-$autos  = require(__DIR__ . '/data/dbAuto.php');
-$users  = require(__DIR__ . '/data/dbUsers.php');
+$cities = require(__DIR__.'/data/dbCity.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos, $currentCity);
+$autos = get_autos($currentCity);
 $login = authorize();
 
 ?>
@@ -114,7 +112,7 @@ $login = authorize();
                     <tbody>
                     <?php
                     foreach( $autos as $autoData ) {
-                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td><?php
+                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($autoData['cityCode'])?></td><?php
                     }
                     ?>
                     </tbody>

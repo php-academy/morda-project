@@ -23,7 +23,10 @@ function set_curr_city( $curr_city ) {
     setcookie('curr_city', $curr_city, time()+ 60*60*24*30, '/');
 }
 
-function get_city_data_by_code($dbCity, $cityCode) {
+function get_city_data_by_code($cityCode) {
+
+    $dbCity = require(__DIR__ . '/dbCity.php');
+
     foreach( $dbCity as $cityData ) {
         if( $cityData['code'] == $cityCode ) {
             return $cityData;
@@ -32,8 +35,8 @@ function get_city_data_by_code($dbCity, $cityCode) {
     return false;
 }
 
-function get_city_name_by_code($dbCity, $cityCode) {
-    $cityData = get_city_data_by_code($dbCity,$cityCode);
+function get_city_name_by_code( $cityCode) {
+    $cityData = get_city_data_by_code($cityCode);
     if( $cityData ) {
         return $cityData['name'];
     } else {
@@ -41,7 +44,10 @@ function get_city_name_by_code($dbCity, $cityCode) {
     }
 }
 
-function filter($dbAuto, $currCity) {
+function get_autos($currCity) {
+
+    $dbAuto = require(__DIR__ . '/dbAuto.php');
+
     $result = array();
     foreach( $dbAuto as $autoData ) {
         if( $autoData['cityCode'] == $currCity ) {
