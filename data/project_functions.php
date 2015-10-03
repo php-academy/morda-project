@@ -36,13 +36,13 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
         $lat2 = $coord2['latitude'];
         $long2 = $coord2['longitude'];
 
-        // перевести координаты в радианы
+        // РїРµСЂРµРІРµСЃС‚Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ СЂР°РґРёР°РЅС‹
         $lat1 = $lat1 * M_PI / 180;
         $lat2 = $lat2 * M_PI / 180;
         $long1 = $long1 * M_PI / 180;
         $long2 = $long2 * M_PI / 180;
 
-        // косинусы и синусы широт и разницы долгот
+        // РєРѕСЃРёРЅСѓСЃС‹ Рё СЃРёРЅСѓСЃС‹ С€РёСЂРѕС‚ Рё СЂР°Р·РЅРёС†С‹ РґРѕР»РіРѕС‚
         $cl1 = cos($lat1);
         $cl2 = cos($lat2);
         $sl1 = sin($lat1);
@@ -51,7 +51,7 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
         $cdelta = cos($delta);
         $sdelta = sin($delta);
 
-        // вычисления длины большого круга
+        // РІС‹С‡РёСЃР»РµРЅРёСЏ РґР»РёРЅС‹ Р±РѕР»СЊС€РѕРіРѕ РєСЂСѓРіР°
         $y = sqrt(pow($cl2 * $sdelta, 2) + pow($cl1 * $sl2 - $sl1 * $cl2 * $cdelta, 2));
         $x = $sl1 * $sl2 + $cl1 * $cl2 * $cdelta;
 
@@ -62,54 +62,51 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
     return $dist;
 }
 
-/*
-function filter($dbAuto,$cities,$currentCity,$needDistance=500,$is4wd=true,$isAutoTrans=true){
+
+function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans){
 
     $ar_city=array();
     $ar_auto=array();
 
     $ar_city=distance_cities($cities,$currentCity,$needDistance);
-    # насколько я увидел $currCityCode - не попадает в список городов, по которым происходит поиск
-    # нужно искать в текущем и всех остальных, которые удовлетворяют расстоянию
     if(!empty($ar_city)){
         foreach($ar_city as $cityCode){
             foreach($dbAuto as $auto){
-                if($cityCode==$auto['cityCode']){
-                    if($auto['model']['is4wd']==$is4wd && $auto['model']['isAutoTrans']==$isAutoTrans){
-                        $ar_auto[]=$auto['model']['name'];
+                if(in_array($auto['cityCode'],$ar_city)){
+                    if((!isset($is4wd) || ($auto['model']['is4wd']==$is4wd))
+                    && (!isset($isAutoTrans) || ($auto['model']['isAutoTrans']==$isAutoTrans))
+                    && (!isset($price_ot) || ($auto['price']['value']>=$price_ot*1000))
+                    && (!isset($price_do) || ($auto['price']['value']<=$price_do*1000))
+                    && (!isset($year_ot) || ($auto['model']['year']>=$year_ot))
+                    && (!isset($year_do) || ($auto['model']['year']<=$year_do))){
+                        $ar_auto[]=$auto;
                     }
                 }
             }
         }
-        #код поиска выше можно сократить, почитай о функции in_array
-        #очень часто используемая функция
-        #foreach($dbAuto as $auto){
-        #        if(in_array($auto['cityCode'], $ar_city){
-        #            if($auto['model']['is4wd']==$is4wd && $auto['model']['isAutoTrans']==$isAutoTrans){
-        #                $ar_auto[]=$auto['model']['name'];
-        #            }
-        #        }
-        #    }
+
 
     }
     else{
-        $ar_auto['error']='Машины не найдены';
+        $ar_auto['error']='РњР°С€РёРЅС‹ РЅРµ РЅР°Р№РґРµРЅС‹';
     }
     if(empty($ar_auto)){
-        $ar_auto['error']='Машины не найдены';
+        $ar_auto['error']='РњР°С€РёРЅС‹ РЅРµ РЅР°Р№РґРµРЅС‹';
     }
     return $ar_auto;
 }
-*/
-function distance_cities($cities,$currentCity,$needDistance)
-{
+
+function distance_cities($cities,$currentCity,$needDistance){
     $ar_city = array();
     foreach ($cities as $name) {
-        if (calculateTheDistance($cities, $currentCity, $name) <= $needDistance) {
+ //       $citycode=$name;
+        if (calculateTheDistance($cities, $currentCity, $citycode) <= $needDistance) {
             $ar_city = $name;
         }
     }
     return $ar_city;
+}
+/*
 function filter($dbAuto, $currCity) {
         $result = array();
         foreach($dbAuto as $autoData) {
@@ -119,3 +116,4 @@ function filter($dbAuto, $currCity) {
     }
     return $result;
 }
+*/

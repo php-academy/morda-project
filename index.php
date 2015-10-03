@@ -5,7 +5,9 @@ $autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
-$autos = filter($autos,$currentCity);
+
+$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans);
+print_r($autos);
 $isUserAuth = false;
 if( isset($_COOKIE['user'])){
     $userCookie = $_COOKIE['user'];
@@ -51,7 +53,7 @@ if( isset($_COOKIE['user'])){
             <br>
             <div class="row">
                 <div class="col-xs-9">
-                    <form action="/filter.php" method="post" >
+                    <form action="/filter.php" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>

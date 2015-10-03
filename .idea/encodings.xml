@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/auth.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data/dbAuto.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data/dbCity.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data/dbusers.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/data/project_functions.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/filter.php" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/logout.php" charset="UTF-8" />
+  </component>
+</project>
