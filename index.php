@@ -6,14 +6,17 @@ $users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользо�
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
+$saltstr = 'helloword!qwerty';
+echo md5($saltstr);
+
 $isUserAuth = false;
 if ( isset($_COOKIE['user']) ) {
     $userCookie = $_COOKIE['user'];    
     $arUserCookie = explode(':', $userCookie);
     $login = $arUserCookie[0];
-    $md5password = $arUserCookie[1];
+    $salt_password = $arUserCookie[1];
     # Проверяем соответствие логина и пароля из куки с масивом пользователей:
-    if ( isset($users[$login]) && ($md5password == md5($users[$login]['password'])) ) {
+    if ( isset($users[$login]) && ($salt_password == $users[$login]['salt_password']) ) {
         $isUserAuth = true;
     }
 }
