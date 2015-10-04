@@ -6,15 +6,18 @@ $users = require(__DIR__ . '/data/dbUsers.php');
 
 # LogIn:
 if ( isset($_POST['login']) && isset($_POST['password']) ) {
-    $login = $_POST['login'];
-    $password = $_POST['password'];
+    $login = $_POST['login'];  # Логин.
+    $password = $_POST['password']; # Пароль.
+    $userIP = $_SERVER["REMOTE_ADDR"];  # IP пользователя.
+    $currDate = date('D,M,Y');   # Текущаа дата.
+    $userAgent = $_SERVER["HTTP_USER_AGENT"];
     if (
         preg_match("/^[a-zA-Z0-9]{3,30}$/", $_POST["login"]) &&
         preg_match("/^[a-zA-Z0-9]{6,30}$/", $_POST["password"])
     ) {
         $salt_password = md5( $users[$login]['salt'].$_POST["password"] );
         if ( isset($users[$login]) && ($users[$login]['salt_password'] == $salt_password) ) {
-            setcookie( "user", $login . ':' . $salt_password, time() + 60*60*24*30, '/');
+            setcookie( "user", $login . ':' . $salt_password . md5($userIP) . md5($userAgent) . md5($currDate), time() + 60*60*24*30, '/');
         }
     }
 }
