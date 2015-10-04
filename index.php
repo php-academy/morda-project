@@ -6,8 +6,8 @@ $users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользо�
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$saltstr = 'helloword!123456';
-echo md5($saltstr);
+//$saltstr = 'helloword!123456';
+//echo md5($saltstr);
 
 $isUserAuth = false;
 if ( isset($_COOKIE['user']) ) {
@@ -23,6 +23,10 @@ if ( isset($_COOKIE['user']) ) {
         $isUserAuth = true;
     }
 }
+$tmp = getUserByLogin($login);
+var_dump($tmp);
+
+
 ?>
 <!DOCTYPE html>
 <html>
