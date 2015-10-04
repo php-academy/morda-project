@@ -20,7 +20,7 @@ if(isset($_POST['login']) && isset($_POST['password'])){
             isset($users[$login]) &&
             ($users[$login]['saltpassword'] == $saltpassword)
         ) {
-            setcookie( "user", $login. ':'.$saltpassword, time() + 60*60*24*30, '/');
+            setcookie( "user", $login. ':'.md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$users[$login]['salt'].$saltpassword), time() + 60*60*24*30, '/');
         }
 //        $login;
 //        $password;

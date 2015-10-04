@@ -63,9 +63,28 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
 }
 
 
-function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans){
+function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do){
+$ar_auto = array();
+    $ar_city = array();
+    $ar_city=distance_cities($cities,$currentCity,$needDistance);
+    foreach($dbAuto as $dataauto){
 
-    $ar_city=array();
+            if ((in_array($dataauto['cityCode'],$ar_city)
+                && (!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
+                && (!isset($isAutoTrans) || ($dataauto['model']['isAutoTrans'] == $isAutoTrans))
+                && (!isset($price_ot) || ($dataauto['price']['value'] > ($price_ot * 1000)))
+                && (!isset($price_do) || ($dataauto['price']['value'] < ($price_do * 1000)))
+                && (!isset($year_ot) || ($dataauto['model']['year'] >= $year_ot))
+                && (!isset($year_do) || ($dataauto['model']['year'] <= $year_do))
+                && (!isset($needDistance) || ($needDistance <= $year_do))
+            )) {
+                $ar_auto[] = $dataauto;
+            }
+
+    }
+    return $ar_auto;
+}
+   /* $ar_city=array();
     $ar_auto=array();
 
     $ar_city=distance_cities($cities,$currentCity,$needDistance);
@@ -93,18 +112,29 @@ function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans){
     if(empty($ar_auto)){
         $ar_auto['error']='Машины не найдены';
     }
-    return $ar_auto;
-}
+    return $ar_auto;*/
+
 
 function distance_cities($cities,$currentCity,$needDistance){
     $ar_city = array();
-    foreach ($cities as $name) {
+    foreach ($cities as $name => $val) {
  //       $citycode=$name;
-        if (calculateTheDistance($cities, $currentCity, $citycode) <= $needDistance) {
-            $ar_city = $name;
+        if (calculateTheDistance($cities, $currentCity, $name) <= $needDistance) {
+            $ar_city[] = $name;
         }
     }
     return $ar_city;
+}
+/*
+function getuser($dbusers,$login){
+    $userdata = array();
+    if (in_array($dbusers, $login)){
+        foreach($dbusers[$login] as $data){
+            $userdata[] = $data;
+        }
+    }
+    else
+return $userdata;
 }
 /*
 function filter($dbAuto, $currCity) {

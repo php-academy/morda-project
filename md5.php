@@ -6,3 +6,6 @@
  * Time: 11:25
  */
 echo md5('frhj'.'qwerty');
+echo '<pre>';
+print_r($_SERVER);
+echo '</pre>';

@@ -6,8 +6,16 @@ $users = require(__DIR__ . '/data/dbUsers.php');
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans);
-print_r($autos);
+$dist = (isset($_POST['distance']) && !empty($_POST['distance'])) ? $_POST['distance'] : NULL;
+$price_ot = (isset($_POST['price_ot']) && !empty($_POST['price_ot'])) ? $_POST['price_ot'] : NULL;
+$price_do = (isset($_POST['price_do']) && !empty($_POST['price_do']))? $_POST['price_do'] : NULL;
+$year_ot = (isset($_POST['year_ot']) && !empty($_POST['year_ot'])) ? $_POST['year_ot'] : NULL;
+$year_do = (isset($_POST['year_do']) && !empty($_POST['year_do'])) ? $_POST['year_do'] : NULL;
+$isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
+$is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
+
+$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
+//print_r($autos);
 $isUserAuth = false;
 if( isset($_COOKIE['user'])){
     $userCookie = $_COOKIE['user'];
@@ -16,7 +24,7 @@ if( isset($_COOKIE['user'])){
     $saltPasswordCookie = $arUserCookie[1];
 
     if(isset($users[$login])){
-        $saltpassword = $users[$login]['saltpassword'];
+        $saltpassword = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$users[$login]['salt'].$users[$login]['saltpassword']);
         if($saltPasswordCookie == $saltpassword){
             $isUserAuth = true;
         }
@@ -53,7 +61,7 @@ if( isset($_COOKIE['user'])){
             <br>
             <div class="row">
                 <div class="col-xs-9">
-                    <form action="/filter.php" method="post">
+                    <form action="/" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>
@@ -69,15 +77,21 @@ if( isset($_COOKIE['user'])){
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                                <input name="distance" placeholder="расстояние" class="form-control">
+                                <input name="distance" placeholder="расстояние" value="" class="form-control">
                             </div>
+                            <?php
+                            $checked_isAutoTrans = isset($_POST['isAutoTrans']) ? 'checked' : '';
+                            ?>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input name="isAutoTrans" type="checkbox">Автомат</label>
+                                <label><input name="isAutoTrans" type="checkbox" <?=$checked_isAutoTrans?>>Автомат</label>
                             </div>
+                            <?php
+                            $checked4wd = isset($_POST['is4wd']) ? 'checked' : '';
+                            ?>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input name="is4wd" type="checkbox">4WD</label>
+                                <label><input name="is4wd" type="checkbox" <?=$checked4wd?>>4WD</label>
                             </div>
                             <div class="form-group form-inline">
                                 <button type="submit" class="btn btn-default">Найти</button>
@@ -125,8 +139,8 @@ if( isset($_COOKIE['user'])){
                     <tbody>
                     <?php
 
-                    foreach($autos as $autodata){
-                        ?><td><?=$autodata['model']['name']?></td><td><?=$autodata['model']['year']?></td><td><?=$autodata['model']['power']?>л.с.</td><td><?=$autodata['model']['run']?>км</td><td><?=$autodata['price']['value']?>руб.<br><?=$cities[$autodata['cityCode']]['name']?></td><?php
+                    foreach($autos as $autodata1){
+                        ?><tr><td><?=$autodata1['model']['name']?></td><td><?=$autodata1['model']['year']?></td><td><?=$autodata1['model']['power']?>л.с.</td><td><?=$autodata1['model']['run']?>км</td><td><?=$autodata1['price']['value']?>руб.<br><?=$cities[$autodata1['cityCode']]['name']?></td></tr><?php
                     }
                     ?>
                     </tbody>
