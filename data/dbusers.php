@@ -8,8 +8,11 @@
 return array(
     'vasya' => array(
         'Login' => 'vasya',
-        'password' => '123456'),
+        'saltpassword' => '5e4df98179ab4b5fbe6bd089c02e5b1b',
+        'salt' => 'uyrtd'),
+
     'petya' => array(
     'Login' => 'petya',
-    'password' => 'qwerty',)
+    'saltpassword' => '77b2702bbad28ff3ad3b4dae3060e231',
+    'salt' => 'frhj'    )
 );

@@ -10,6 +10,7 @@ $users = require( __DIR__ . '/data/dbUsers.php');
 if(isset($_POST['login']) && isset($_POST['password'])){
     $login = $_POST['login'];
     $password = $_POST['password'];
+    $saltpassword = md5($users[$login]['salt'].$_POST['password']);
 
     if(
     preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
@@ -17,9 +18,9 @@ if(isset($_POST['login']) && isset($_POST['password'])){
     ) {
         if(
             isset($users[$login]) &&
-            ($users[$login]['password'] == $password)
+            ($users[$login]['saltpassword'] == $saltpassword)
         ) {
-            setcookie( "user", $login. ':'. md5($password), time() + 60*60*24*30, '/');
+            setcookie( "user", $login. ':'.$saltpassword, time() + 60*60*24*30, '/');
         }
 //        $login;
 //        $password;

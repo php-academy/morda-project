@@ -13,11 +13,11 @@ if( isset($_COOKIE['user'])){
     $userCookie = $_COOKIE['user'];
     $arUserCookie = explode(':',$userCookie);
     $login = $arUserCookie[0];
-    $md5Password = $arUserCookie[1];
+    $saltPasswordCookie = $arUserCookie[1];
 
     if(isset($users[$login])){
-        $password = $users[$login]['password'];
-        if(md5($password) == $md5Password){
+        $saltpassword = $users[$login]['saltpassword'];
+        if($saltPasswordCookie == $saltpassword){
             $isUserAuth = true;
         }
     }
