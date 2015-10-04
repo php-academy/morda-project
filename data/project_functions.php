@@ -72,9 +72,9 @@ function calculateTheDistance ($lat1, $long1, $lat2, $long2) {
     return $dist;
 }
 
-function filter(array $dbAuto, array $dbCity,$currCityCode='nsk',$needDistance,$is4wd,$isAutoTrans){
 
-    $ar_city=array();
+function filter(array $dbAuto, array $dbCity,$currCityCode,$needDistance,$is4wd,$isAutoTrans){
+
     $ar_auto=array();
 
     $ar_city=distance_cities($dbCity,$currCityCode,$needDistance);
@@ -131,4 +131,22 @@ function distance_cities($dbCity,$currCityCode,$needDistance){
         }
     }
     return $ar_city;
+}
+
+
+function get_user_by_login($login){
+    $users = require( __DIR__ . '/dbusers.php');
+    if(isset($users[$login])){
+        return $users[$login];
+    }else{
+        return false;
+    }
+}
+
+function getPostParam($param) {
+    if( isset($_POST[$param]) ) {
+        return $_POST[$param];
+    } else {
+        return false;
+    }
 }

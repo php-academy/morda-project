@@ -6,11 +6,24 @@ $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
 $users = require( __DIR__ . '/data/dbusers.php');
 
+//echo md5('pdofig123456').'<br>';
+//echo md5('pdoifgqwerty');
+
+$distance = getPostParam('distance');
+$wd=getPostParam('wd');
+if($wd){
+    $wdchecked='checked';
+}
+$autotrans=getPostParam('autotrans');
+if($autotrans){
+    $autchecked='checked';
+}
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos,$cities,$currentCity);git g
-//print_r($autos);
+$autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
+
+//$user=get_user_by_login($login)
 
 $isUserAuth = false;
 if( isset($_COOKIE['user'])){
@@ -36,11 +49,8 @@ if( isset($_GET['logout']) ) {
 
 if(isset($_SESSION['error'])) {
     $error = $_SESSION['error'];
+    unset($_SESSION['error']);
     $is_error = true;
-}
-
-if(!isset($_POST['login']) && !isset($_POST['password'])){
-   unset($_SESSION['error']);
 }
 
 
@@ -76,7 +86,7 @@ if(!isset($_POST['login']) && !isset($_POST['password'])){
             <br>
             <div class="row">
                 <div class="col-xs-9">
-                    <form >
+                    <form action="" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>
@@ -92,15 +102,15 @@ if(!isset($_POST['login']) && !isset($_POST['password'])){
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                                <input placeholder="расстояние" class="form-control">
+                                <input placeholder="расстояние" name="distance" class="form-control" value="<?=$distance?>">
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox">Автомат</label>
+                                <label><input type="checkbox" name="autotrans" value="true" <?=$autchecked?>>Автомат</label>
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox">4WD</label>
+                                <label><input type="checkbox" name="wd" value="true" <?=$wdchecked?>>4WD</label>
                             </div>
                             <div class="form-group form-inline">
                                 <button type="submit" class="btn btn-default">Найти</button>
@@ -145,6 +155,7 @@ if(!isset($_POST['login']) && !isset($_POST['password'])){
                 </div>
             </div>
             <br>
+            <?php if($autos){?>
             <div class="row">
                 <table class="table table-hover">
                     <thead>
@@ -169,6 +180,9 @@ if(!isset($_POST['login']) && !isset($_POST['password'])){
                     </tbody>
                 </table>
             </div>
+            <?php }else{
+                echo 'Машины не найдены!';
+            } ?>
             <br>
             <div class="row bt">
                 <br>

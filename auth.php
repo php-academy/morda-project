@@ -5,7 +5,7 @@
  * Date: 01.10.2015
  * Time: 20:17
  */
-//print_r($_POST);
+require(__DIR__ . '/data/project_functions.php');
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 $users = require( __DIR__ . '/data/dbUsers.php');
