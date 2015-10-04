@@ -15,9 +15,11 @@ if ( isset($_POST['login']) && isset($_POST['password']) ) {
         preg_match("/^[a-zA-Z0-9]{3,30}$/", $_POST["login"]) &&
         preg_match("/^[a-zA-Z0-9]{6,30}$/", $_POST["password"])
     ) {
-        $salt_password = md5( $users[$login]['salt'].$_POST["password"] );
-        if ( isset($users[$login]) && ($users[$login]['salt_password'] == $salt_password) ) {
-            setcookie( "user", $login . ':' . $salt_password . md5($userIP) . md5($userAgent) . md5($currDate), time() + 60*60*24*30, '/');
+        if ( isset($users[$login]) ) {
+            $salt_password = md5( $users[$login]['salt'].$_POST["password"] );
+            if ( $users[$login]['salt_password'] == $salt_password ) {
+                setcookie( "user", $login . ':' . $salt_password . md5($userIP) . md5($userAgent) . md5($currDate), time() + 60*60*24*30, '/');
+            }
         }
     }
 }
