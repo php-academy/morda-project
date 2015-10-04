@@ -72,7 +72,7 @@ function calculateTheDistance ($lat1, $long1, $lat2, $long2) {
     return $dist;
 }
 
-function filter(array $dbAuto, array $dbCity,$currCityCode='nsk',$needDistance=500,$is4wd=true,$isAutoTrans=true){
+function filter(array $dbAuto, array $dbCity,$currCityCode='nsk',$needDistance,$is4wd,$isAutoTrans){
 
     $ar_city=array();
     $ar_auto=array();
@@ -90,10 +90,10 @@ function filter(array $dbAuto, array $dbCity,$currCityCode='nsk',$needDistance=5
         }
     }
     else{
-        $ar_auto['error']='Машины не найдены';
+        return false;
     }
     if(empty($ar_auto)){
-        $ar_auto['error']='Машины не найдены';
+        return false;
     }
     return $ar_auto;
 }

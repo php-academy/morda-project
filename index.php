@@ -9,7 +9,7 @@ $users = require( __DIR__ . '/data/dbusers.php');
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos,$cities,$currentCity);
+$autos = filter($autos,$cities,$currentCity);git g
 //print_r($autos);
 
 $isUserAuth = false;
