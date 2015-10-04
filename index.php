@@ -1,4 +1,5 @@
 <?php
+session_start();
 date_default_timezone_set('America/Los_Angeles');
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__.'/data/dbCity.php');
@@ -86,11 +87,18 @@ $login = authorize();
                                 <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
                             <div class="form-group form-inline">
+                                <?php if( isset($_SESSION['login']['error']) ) {
+                                    ?><div class="alert alert-danger" role="alert"><?=$_SESSION['login']['error'];?></div><?
+                                    unset($_SESSION['login']['error']);
+                                }  ?>
+                            </div>
+                            <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
                                 <button type="submit" class="btn btn-default">Войти</button>
                             </div>
                         </fieldset>
                     </form>
+
                     <!-- Not authorized user -->
                     <?php } else { ?>
                     <!-- Authorized user -->

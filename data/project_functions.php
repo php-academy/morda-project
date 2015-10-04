@@ -68,6 +68,8 @@ function get_user_by_login($login) {
 
 function login() {
 
+    $_SESSION['login']['error'] = 'Неверные логин/пароль';
+
     if( isset($_POST['login']) && isset($_POST['password']) ) {
         $login = $_POST['login'];
         $password = $_POST['password'];
@@ -84,7 +86,7 @@ function login() {
                         $user['salt_password'] ,
                         $user['salt']
                     );
-
+                    unset($_SESSION['login']['error']);
                     setcookie("user", $login . ':' . $hash, time() + 60 * 60 * 24 * 30, '/');
                 }
             }
