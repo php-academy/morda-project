@@ -9,49 +9,26 @@ $users = require( __DIR__ . '/data/dbusers.php');
 //echo md5('pdofig123456').'<br>';
 //echo md5('pdoifgqwerty');
 
-$distance = getPostParam('distance');
-$wd=getPostParam('wd');
-if($wd){
-    $wdchecked='checked';
-}
-$autotrans=getPostParam('autotrans');
-if($autotrans){
-    $autchecked='checked';
-}
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
+//POST данные для поиска
+
+$distance = getPostParam('distance');
+
+$wd=getPostParam('wd');
+$wdchecked=isChecked($wd);
+
+$autotrans=getPostParam('autotrans');
+$autchecked=isChecked($autotrans);
+
+///////////////
+
+$isUserAuth=isAuth();
+
+$error=isError();
+
 $autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
-
-//$user=get_user_by_login($login)
-
-$isUserAuth = false;
-if( isset($_COOKIE['user'])){
-    $userCookie = $_COOKIE['user'];
-    $arUserCookie = explode(':',$userCookie);
-    $login = $arUserCookie[0];
-    $md5Password = $arUserCookie[1];
-
-    if(isset($users[$login])){
-        $password = $users[$login]['password'];
-        if(md5($password) == $md5Password){
-            $isUserAuth = true;
-        }
-    }
-}
-
-if( isset($_GET['logout']) ) {
-    if($_GET['logout']==1){
-        setcookie( "user", $login. ':'. md5($password), time(), '/');
-        $isUserAuth=false;
-    }
-}
-
-if(isset($_SESSION['error'])) {
-    $error = $_SESSION['error'];
-    unset($_SESSION['error']);
-    $is_error = true;
-}
 
 
 ?>
@@ -123,7 +100,7 @@ if(isset($_SESSION['error'])) {
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
-                            <?php if($is_error){?>
+                            <?php if($error){?>
                                 <div>
                                     <label class="error">
                                         <?=$error?>

@@ -150,3 +150,44 @@ function getPostParam($param) {
         return false;
     }
 }
+
+function isChecked($param){
+    if($param){
+        $checked='checked';
+    }else{
+       $checked='';
+    }
+    return $checked;
+}
+
+
+function isAuth(){
+    $isUserAuth=false;
+    if (isset($_COOKIE['user'])) {
+        $arUserCookie = explode(':', $_COOKIE['user']);
+        $login = $arUserCookie[0];
+        $md5Password = $arUserCookie[1];
+        $user=get_user_by_login($login);
+        if($user){
+            $password = $user['password'];
+            if (md5($password) == $md5Password) {
+                $isUserAuth = true;
+            }
+        }
+    }
+    if( isset($_GET['logout']) ) {
+        if($_GET['logout']==1){
+            setcookie( "user", $login. ':'. md5($password), time(), '/');
+            $isUserAuth=false;
+        }
+    }
+    return $isUserAuth;
+}
+
+function isError(){
+    if (isset($_SESSION['error'])) {
+        $error = $_SESSION['error'];
+        unset($_SESSION['error']);
+    }
+    return $error;
+}
