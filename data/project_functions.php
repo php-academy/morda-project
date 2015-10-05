@@ -89,4 +89,38 @@ function getuser($login){
     else return false;
 return $userdata;
 }
+function log_in(){
+    if(isset($_POST['login']) && isset($_POST['password'])){
 
+        $login = $_POST['login'];
+        $password = $_POST['password'];
+        if(
+            preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+            preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+        ) {
+            $userdata = getuser($login);
+            if($userdata){
+                $saltpassword = md5($userdata['salt'].$_POST['password']);
+                if($userdata['saltpassword'] == $saltpassword)
+                {
+                    setcookie( "user", $login. ':'.md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userdata['salt'].$saltpassword), time() + 60*60*24*30, '/');
+                }
+            }
+        }
+    }
+}
+function authCheck(){
+
+    if(isset($_COOKIE['user'])){
+        $userCookie = $_COOKIE['user'];
+        $arUserCookie = explode(':',$userCookie);
+        $saltPasswordCookie = $arUserCookie[1];
+        if (getuser($arUserCookie[0])){
+            $userData = getuser($arUserCookie[0]);
+            $saltpassword = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userData['salt'].$userData['saltpassword']);
+            if($saltPasswordCookie == $saltpassword){
+               return $isUserAuth = true;
+            }
+        }
+    }
+}

@@ -17,18 +17,7 @@ $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 $autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
 //print_r($autos);
 $isUserAuth = false;
-if(isset($_COOKIE['user'])){
-    $userCookie = $_COOKIE['user'];
-    $arUserCookie = explode(':',$userCookie);
-$saltPasswordCookie = $arUserCookie[1];
-    if (getuser($arUserCookie[0])){
-    $userData = getuser($arUserCookie[0]);
-        $saltpassword = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userData['salt'].$userData['saltpassword']);
-        if($saltPasswordCookie == $saltpassword){
-            $isUserAuth = true;
-        }
-    }
-}
+$isUserAuth = authCheck();
 ?>
 <!DOCTYPE html>
 <html>
@@ -120,7 +109,7 @@ $saltPasswordCookie = $arUserCookie[1];
                     <!-- Not authorized user -->
                     <?php } else {?>
                     <!-- Authorized user -->
-                    <i class="glyphicon glyphicon-user"><?=$login?></i>
+                    <i class="glyphicon glyphicon-user"><?=substr($_COOKIE['user'],0,strpos($_COOKIE['user'],':'))?></i>
                     <br>
                     <a href="/logout.php">Выход</a>
                     <!-- Authorized user -->
