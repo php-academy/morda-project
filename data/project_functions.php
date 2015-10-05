@@ -80,15 +80,13 @@ $ar_auto = array();
     }
     return $ar_auto;
 }
-/*
-function getuser($dbusers,$login){
-    $userdata = array();
-    if (in_array($dbusers, $login)){
-        foreach($dbusers[$login] as $data){
-            $userdata[] = $data;
-        }
+
+function getuser($login){
+    $dbusers = require(__DIR__ . '/dbUsers.php');
+    if (isset($dbusers[$login])){
+        $userdata = $dbusers[$login];
     }
-    else
+    else return false;
 return $userdata;
 }
-*/
+

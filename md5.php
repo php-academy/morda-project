@@ -5,7 +5,8 @@
  * Date: 04.10.2015
  * Time: 11:25
  */
-echo md5('frhj'.'qwerty');
-echo '<pre>';
-print_r($_SERVER);
-echo '</pre>';
+require(__DIR__ . '/data/project_functions.php');
+$login = 'vasya';
+var_dump(getuser($login));
+$login = 'asgftsg';
+var_dump(getuser($login));
