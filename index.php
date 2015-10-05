@@ -4,27 +4,12 @@ $cities = require(__DIR__ . '/data/dbCity.php');
 $ads = require(__DIR__ . '/data/dbAuto.php'); # Массив с объявлениями.
 $users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользователями.
 $currentCity = get_curr_city();
-set_curr_city($currentCity);
+$isUserAuth = getAuthFromCookie();
 
+//$tmp = getUserByLogin('vasya');
+//var_dump($tmp);
 //$saltstr = 'helloword!123456';
 //echo md5($saltstr);
-
-$isUserAuth = false;
-if ( isset($_COOKIE['user']) ) {
-    $userCookie = $_COOKIE['user'];    
-    $arUserCookie = explode(':', $userCookie);
-    $login = $arUserCookie[0];
-    $hash = $arUserCookie[1];
-    # Проверяем соответствие логина и пароля из куки с масивом пользователей:
-    if (
-        isset($users[$login]) &&
-        ( $hash == $users[$login]['salt_password'] . md5($_SERVER["REMOTE_ADDR"]) . md5($_SERVER["HTTP_USER_AGENT"]) . md5(date('D,M,Y')) )
-        ) {
-        $isUserAuth = true;
-    }
-}
-$tmp = getUserByLogin($login);
-var_dump($tmp);
 
 
 ?>
