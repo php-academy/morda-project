@@ -8,7 +8,7 @@
 return array(
     'nsk' => array(
         'code'  => 'nsk',
-        'name'  => 'Novosibitsk',
+        'name'  => 'Новосибирск',
         'coord' => array(
             'latitude'  => 55.1,
             'longitude' => 82.55,
@@ -16,7 +16,7 @@ return array(
     ),
     'krsk' => array(
         'code'  => 'krsk',
-        'name'  => 'Krasnoyarsk',
+        'name'  => 'Красноярск',
         'coord' => array(
             'latitude'  => 56.01,
             'longitude' => 93.04,
@@ -24,7 +24,7 @@ return array(
     ),
     'brnl'  => array(
         'code'  => 'brnl',
-        'name'  => 'Barnaul',
+        'name'  => 'Барнаул',
         'coord' => array(
             'latitude'  => 53.20,
             'longitude' => 83.46,
@@ -32,7 +32,7 @@ return array(
     ),
     'tsk' => array(
         'code'  => 'tsk',
-        'name'  => 'Tomsk',
+        'name'  => 'Томск',
         'coord' => array(
             'latitude'  => 56.29,
             'longitude' => 84.57,
@@ -40,7 +40,7 @@ return array(
     ),
     'nzsk' => array(
         'code'  => 'nzsk',
-        'name'  => 'Novokuznetsk',
+        'name'  => 'Новокузнецк',
         'coord' => array(
             'latitude'  => 53.44,
             'longitude' => 87.05,

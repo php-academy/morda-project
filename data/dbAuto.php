@@ -21,6 +21,7 @@ return array(
             'currency'	=> 'RUB',
         ),
         'cityCode' => 'nsk',
+        'id' => '1',
     ),
     array(
         'model' => array(
@@ -36,6 +37,7 @@ return array(
             'currency'	=> 'RUB',
         ),
         'cityCode' => 'nsk',
+        'id' => '2',
     ),
     array(
         'model' => array(
@@ -51,6 +53,7 @@ return array(
             'currency'	=> 'RUB',
         ),
         'cityCode' => 'krsk',
+        'id' => '3',
     ),
     array(
         'model' => array(
@@ -66,6 +69,7 @@ return array(
             'currency'	=> 'RUB',
         ),
         'cityCode' => 'brnl',
+        'id' => '4',
     ),
     array(
         'model' => array(
@@ -81,6 +85,7 @@ return array(
             'currency'	=> 'RUB',
         ),
         'cityCode' => 'tsk',
+        'id' => '57',
     ),
     array(
         'model' => array(
@@ -95,6 +100,23 @@ return array(
             'value' 	=> 812000,
             'currency'	=> 'RUB',
         ),
-        'cityCode' => 'nzsk'
+        'cityCode' => 'nzsk',
+        'id' => '6',
+    ),
+    array(
+        'model' => array(
+            'name'  		=> 'Subaru Impreza WRX STI',
+            'year'  		=> 2001,
+            'run'   		=> 120000,
+            'power' 		=> 280,
+            'isAutoTrans'	=> false,
+            'is4wd'   		=> true,
+        ),
+        'price' => array(
+            'value' 	=> 650000,
+            'currency'	=> 'RUB',
+        ),
+        'cityCode' => 'nsk',
+        'id' => '8',
     ),
 );

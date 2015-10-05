@@ -126,19 +126,12 @@ $isUserAuth = getAuthFromCookie();
             </div>
             <br>
             <div class="row">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>Модель</th><th>Год</th><th>Двигатель</th><th>Пробег</th><th>Цена</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
+                <?php
+                if ( isset($_GET['id']) ) {
                     foreach ($ads as $key => $carData) {
-                        $id_ads = $carData['id'];
-                        if ($carData['cityCode'] == $currentCity) { # Если город в объявлении совпадает с текущим городом...
-                            // ...выбираем из этого объявления всю нужную информацию:
-                            $city = $cities["$currentCity"]['name'];
+                        if ($carData['id'] == $_GET['id']) {
+                            $cityCode = $carData['cityCode'];
+                            $city = $cities["$cityCode"]['name'];
                             $modelName = $carData['model']['name'];
                             $modelYear = $carData['model']['year'];
                             $modelRun = $carData['model']['run'];
@@ -146,16 +139,24 @@ $isUserAuth = getAuthFromCookie();
                             $modelIsAutoTrans = $carData['model']['isAutoTrans'];
                             $priceValue = $carData['price']['value'];
                             $priceCurrency = $carData['price']['currency'];
-                            // Выводим в табличку:
-                            ?>
-                            <tr>
-                                <td><a href="/ads.php?id=<?=$id_ads;?>"><?=$modelName;?></a></td>
-                                <td><?=$modelYear;?></td>
-                                <td><?=$modelPower;?></td>
-                                <td><?=$modelRun;?></td>
-                                <td><?=$priceValue;?> <?=$priceCurrency;?><br><?=$city;?></td>
-                            </tr>
-                            <?php
+                ?>
+                <h3><?=$modelName;?></h3>
+                <h4><?=$city;?></h4>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Год</th><th>Двигатель</th><th>Пробег</th><th>Цена</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><?=$modelYear;?></td>
+                        <td><?=$modelPower;?></td>
+                        <td><?=$modelRun;?></td>
+                        <td><?=$priceValue;?> <?=$priceCurrency;?></td>
+                    </tr>
+                    <?php break;
+                            }
                         }
                     }
                     ?>
@@ -169,7 +170,6 @@ $isUserAuth = getAuthFromCookie();
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
                 &copy; <?=date('Y'); ?> Morda inc. by Boris
-
                 <br>
             </div>
         </div>

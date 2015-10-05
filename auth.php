@@ -5,7 +5,8 @@ ini_set("display_errors", 1);
 
 $users = require(__DIR__ . '/data/dbUsers.php');
 
-# LogIn:
+
+### LogIn: ###
 if ( isset($_POST['login']) && isset($_POST['password']) ) {
     $login = $_POST['login'];  # Логин.
     $password = $_POST['password']; # Пароль.
@@ -50,7 +51,7 @@ if ( isset($_POST['login']) && isset($_POST['password']) ) {
     }
 }
 
-# LogOut:
+### LogOut: ###
 if ( isset($_GET['action']) ) {
     $action = $_GET['action'];
     if ($action == 'logout') {
