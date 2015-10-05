@@ -65,65 +65,20 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
 
 function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do){
 $ar_auto = array();
-    $ar_city = array();
-    $ar_city=distance_cities($cities,$currentCity,$needDistance);
     foreach($dbAuto as $dataauto){
 
-            if ((in_array($dataauto['cityCode'],$ar_city)
-                && (!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
+            if ((!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
                 && (!isset($isAutoTrans) || ($dataauto['model']['isAutoTrans'] == $isAutoTrans))
                 && (!isset($price_ot) || ($dataauto['price']['value'] > ($price_ot * 1000)))
                 && (!isset($price_do) || ($dataauto['price']['value'] < ($price_do * 1000)))
                 && (!isset($year_ot) || ($dataauto['model']['year'] >= $year_ot))
                 && (!isset($year_do) || ($dataauto['model']['year'] <= $year_do))
-                && (!isset($needDistance) || ($needDistance <= $year_do))
-            )) {
+                && ($needDistance >= calculateTheDistance($cities, $currentCity, $dataauto['cityCode']))
+            ) {
                 $ar_auto[] = $dataauto;
             }
-
     }
     return $ar_auto;
-}
-   /* $ar_city=array();
-    $ar_auto=array();
-
-    $ar_city=distance_cities($cities,$currentCity,$needDistance);
-    if(!empty($ar_city)){
-        foreach($ar_city as $cityCode){
-            foreach($dbAuto as $auto){
-                if(in_array($auto['cityCode'],$ar_city)){
-                    if((!isset($is4wd) || ($auto['model']['is4wd']==$is4wd))
-                    && (!isset($isAutoTrans) || ($auto['model']['isAutoTrans']==$isAutoTrans))
-                    && (!isset($price_ot) || ($auto['price']['value']>=$price_ot*1000))
-                    && (!isset($price_do) || ($auto['price']['value']<=$price_do*1000))
-                    && (!isset($year_ot) || ($auto['model']['year']>=$year_ot))
-                    && (!isset($year_do) || ($auto['model']['year']<=$year_do))){
-                        $ar_auto[]=$auto;
-                    }
-                }
-            }
-        }
-
-
-    }
-    else{
-        $ar_auto['error']='Машины не найдены';
-    }
-    if(empty($ar_auto)){
-        $ar_auto['error']='Машины не найдены';
-    }
-    return $ar_auto;*/
-
-
-function distance_cities($cities,$currentCity,$needDistance){
-    $ar_city = array();
-    foreach ($cities as $name => $val) {
- //       $citycode=$name;
-        if (calculateTheDistance($cities, $currentCity, $name) <= $needDistance) {
-            $ar_city[] = $name;
-        }
-    }
-    return $ar_city;
 }
 /*
 function getuser($dbusers,$login){
@@ -135,15 +90,5 @@ function getuser($dbusers,$login){
     }
     else
 return $userdata;
-}
-/*
-function filter($dbAuto, $currCity) {
-        $result = array();
-        foreach($dbAuto as $autoData) {
-                if( $autoData['cityCode'] == $currCity ) {
-                        $result[] = $autoData;
-                    }
-    }
-    return $result;
 }
 */

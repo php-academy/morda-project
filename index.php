@@ -65,19 +65,19 @@ if( isset($_COOKIE['user'])){
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>
-                                <input name="price_ot" placeholder="цена от тыс. руб." class="form-control">
+                                <input name="price_ot" placeholder="цена от тыс. руб." class="form-control" value=<?=$price_ot?>>
                                 -
-                                <input name="price_do" placeholder="цена до тыс. руб." class="form-control">
+                                <input name="price_do" placeholder="цена до тыс. руб." class="form-control" value=<?=$price_do?>>
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Год:</label>
-                                <input name="year_ot" placeholder="год от" class="form-control">
+                                <input name="year_ot" placeholder="год от" class="form-control" value=<?=$year_ot?> >
                                 -
-                                <input name="year_do" placeholder="год до" class="form-control">
+                                <input name="year_do" placeholder="год до" class="form-control" value=<?=$year_do?>>
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                                <input name="distance" placeholder="расстояние" value="" class="form-control">
+                                <input name="distance" placeholder="расстояние км." class="form-control" value=<?=$dist?>>
                             </div>
                             <?php
                             $checked_isAutoTrans = isset($_POST['isAutoTrans']) ? 'checked' : '';
