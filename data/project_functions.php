@@ -49,7 +49,6 @@ function getAuthFromCookie() {
     return $isUserAuth;
 }
 
-
 # Функция поиска пользователя по логину:
 # false|array
 # - подключает внутри себя базу пользователей;

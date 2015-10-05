@@ -3,6 +3,8 @@ require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $ads = require(__DIR__ . '/data/dbAuto.php'); # Массив с объявлениями.
 $users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользователями.
+
+session_start();
 $currentCity = get_curr_city();
 $isUserAuth = getAuthFromCookie();
 
@@ -80,6 +82,7 @@ $isUserAuth = getAuthFromCookie();
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
+
                     <!-- Not authorized user -->
                     <?php if(!$isUserAuth)
                     { ?>
@@ -87,12 +90,23 @@ $isUserAuth = getAuthFromCookie();
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
-                                <input name="login" placeholder="Логин" class="form-control">
+                                <input name="login" placeholder="Логин" class="form-control" value="<?=$_SESSION['login'];?>">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label">Пароль:</label>
                                 <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
+                            <?php
+                            if ( isset($_SESSION['login_error']) ) { ?>
+                                <!-- ERROR begin -->
+                                <div class="form-group form-inline">
+                                    <div class="alert alert-danger" role="alert"><?=$_SESSION['login_error'];?></div>
+                                </div>
+                                <!-- ERROR end -->
+                            <?php
+                                unset($_SESSION['login_error']);
+                                unset($_SESSION['login']);
+                            } ?>
                             <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
                                 <button type="submit" class="btn btn-default">Войти</button>
