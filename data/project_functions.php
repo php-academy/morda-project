@@ -166,11 +166,13 @@ function isAuth(){
     if (isset($_COOKIE['user'])) {
         $arUserCookie = explode(':', $_COOKIE['user']);
         $login = $arUserCookie[0];
-        $md5Password = $arUserCookie[1];
+        $md5hash = $arUserCookie[1];
         $user=get_user_by_login($login);
         if($user){
-            $password = $user['password'];
-            if (md5($password) == $md5Password) {
+            $salt_password=$user['salt_password'];
+            $salt=$user['salt'];
+            $hash=hash_password($salt,$salt_password);
+            if ($hash == $md5hash) {
                 $isUserAuth = true;
             }
         }
@@ -190,4 +192,12 @@ function isError(){
         unset($_SESSION['error']);
     }
     return $error;
+}
+
+function hash_password($salt,$salt_password){
+    $user_agent=$_SERVER['HTTP_USER_AGENT'];
+    $ip=$_SERVER['REMOTE_ADDR'];
+    $date=date('d.m.Y');
+    $hash=md5($user_agent.$ip.$date.$salt.$salt_password);
+    return $hash;
 }

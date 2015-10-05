@@ -15,8 +15,10 @@ if(isset($_POST['login']) && isset($_POST['password'])){
 
     if(preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) && preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)) {
         $user=get_user_by_login($login);
-        if($user && $user['password']=$password){
-            setcookie( "user", $login. ':'. md5($password), time() + 60*60*24*30, '/');
+        $salt_password=md5($user['salt'].$password);
+        if($user && $user['salt_password']==$salt_password){
+            $hash=hash_password($user['salt'],$user['salt_password']);
+            setcookie( "user", $login. ':'. $hash, time() + 60*60*24*30, '/');
         }else{
             $_SESSION['error']='Неверный логин или пароль!';
         }
