@@ -136,24 +136,17 @@ $isUserAuth = getAuthFromCookie();
                     <?php
                     foreach ($ads as $key => $carData) {
                         $id_ads = $carData['id'];
-                        if ($carData['cityCode'] == $currentCity) { # Если город в объявлении совпадает с текущим городом...
-                            // ...выбираем из этого объявления всю нужную информацию:
-                            $city = $cities["$currentCity"]['name'];
-                            $modelName = $carData['model']['name'];
-                            $modelYear = $carData['model']['year'];
-                            $modelRun = $carData['model']['run'];
-                            $modelPower = $carData['model']['power'];
-                            $modelIsAutoTrans = $carData['model']['isAutoTrans'];
-                            $priceValue = $carData['price']['value'];
-                            $priceCurrency = $carData['price']['currency'];
-                            // Выводим в табличку:
+                        # Если город в объявлении совпадает с текущим городом...
+                        if ($carData['cityCode'] == $currentCity) {
+                        # ...выбираем из этого объявления всю нужную информацию:
+                        # Выводим в табличку:    
                             ?>
                             <tr>
-                                <td><a href="/ads.php?id=<?=$id_ads;?>"><?=$modelName;?></a></td>
-                                <td><?=$modelYear;?></td>
-                                <td><?=$modelPower;?></td>
-                                <td><?=$modelRun;?></td>
-                                <td><?=$priceValue;?> <?=$priceCurrency;?><br><?=$city;?></td>
+                                <td><a href="/ads.php?id=<?=$id_ads;?>"><?=$carData['model']['name'];?></a></td>
+                                <td><?=$carData['model']['year'];?></td>
+                                <td><?=$carData['model']['power'];?></td>
+                                <td><?=$carData['model']['run'];?></td>
+                                <td><?=$carData['price']['value'];?> <?=$carData['price']['currency'];?><br><?=$cities["$currentCity"]['name'];?></td>
                             </tr>
                             <?php
                         }

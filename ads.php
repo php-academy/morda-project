@@ -132,15 +132,8 @@ $isUserAuth = getAuthFromCookie();
                         if ($carData['id'] == $_GET['id']) {
                             $cityCode = $carData['cityCode'];
                             $city = $cities["$cityCode"]['name'];
-                            $modelName = $carData['model']['name'];
-                            $modelYear = $carData['model']['year'];
-                            $modelRun = $carData['model']['run'];
-                            $modelPower = $carData['model']['power'];
-                            $modelIsAutoTrans = $carData['model']['isAutoTrans'];
-                            $priceValue = $carData['price']['value'];
-                            $priceCurrency = $carData['price']['currency'];
                 ?>
-                <h3><?=$modelName;?></h3>
+                <h3><?=$carData['model']['name'];?></h3>
                 <h4><?=$city;?></h4>
                 <table class="table table-hover">
                     <thead>
@@ -150,10 +143,10 @@ $isUserAuth = getAuthFromCookie();
                     </thead>
                     <tbody>
                     <tr>
-                        <td><?=$modelYear;?></td>
-                        <td><?=$modelPower;?></td>
-                        <td><?=$modelRun;?></td>
-                        <td><?=$priceValue;?> <?=$priceCurrency;?></td>
+                        <td><?=$carData['model']['year'];?></td>
+                        <td><?=$carData['model']['power'];?></td>
+                        <td><?=$carData['model']['run'];?></td>
+                        <td><?=$carData['price']['value'];?> <?=$carData['price']['currency'];?></td>
                     </tr>
                     <?php break;
                             }

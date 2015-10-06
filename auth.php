@@ -12,12 +12,15 @@ if ( isset($_POST['login']) && isset($_POST['password']) ) {
     $password = $_POST['password']; # Пароль.
     $userIP = $_SERVER["REMOTE_ADDR"];  # IP пользователя.
     $currDate = date('D,M,Y');   # Текущаа дата.
-    $userAgent = $_SERVER["HTTP_USER_AGENT"];
+    $userAgent = $_SERVER["HTTP_USER_AGENT"]; # Браузер.
+    # Если логин и пароль имеют допустимы формат ввода:
     if (
          preg_match("/^[a-zA-Z0-9]{3,30}$/", $_POST["login"]) &&
          preg_match("/^[a-zA-Z0-9]{6,30}$/", $_POST["password"])
        )
     {
+        $_SESSION['login'] = $login;
+        # Если логин существует в базе, проверяем пароль:
         if ( isset($users[$login]) )
         {
             $salt_password = md5( $users[$login]['salt'].$_POST["password"] );
@@ -28,13 +31,10 @@ if ( isset($_POST['login']) && isset($_POST['password']) ) {
             else
             {
                 $_SESSION['login_error']  = 'Неверный пароль';
-                $_SESSION['login'] = $login;
             }
         }
-        else {
-            $_SESSION['login_error'] = 'Нет аккаунта с таким логином';
-            $_SESSION['login'] = $login;
-        }
+        # В противном случае выдаем ошибку:
+        else $_SESSION['login_error'] = 'Нет аккаунта с таким логином';
     }
     elseif ( ( empty($login) && empty($password) ) || empty($login) )
     {
