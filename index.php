@@ -5,14 +5,9 @@ $ads = require(__DIR__ . '/data/dbAuto.php'); # Массив с объявлен
 $users = require(__DIR__ . '/data/dbUsers.php'); # Массив с пользователями.
 
 session_start();
-$currentCity = get_curr_city();
-$isUserAuth = getAuthFromCookie();
-
-//$tmp = getUserByLogin('vasya');
-//var_dump($tmp);
-//$saltstr = 'helloword!123456';
-//echo md5($saltstr);
-
+$currentCity = get_curr_city(); # Определяем.сетим текущий город.
+$isUserAuth = getAuthFromCookie(); # Поднимаем авторизацию из Куки.
+setThisPage(); # Сетим текщую страницу для редиректа.
 
 ?>
 <!DOCTYPE html>

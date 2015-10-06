@@ -60,4 +60,12 @@ if ( isset($_GET['action']) ) {
 }
 
 # Refresh IndexPage:
-header('location: /');
+//header('location: /');
+
+# Перенапрявляем на страницу, с которой ушли на авторизацию:
+$refreshPage = $_SESSION['refreshPage'];
+header("Location: http://$refreshPage");
+
+
+
+
