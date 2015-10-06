@@ -1,5 +1,6 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
+session_start();
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
@@ -15,7 +16,6 @@ $isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
 $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 
 $autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
-//print_r($autos);
 $isUserAuth = false;
 $isUserAuth = authCheck();
 ?>
@@ -88,7 +88,8 @@ $isUserAuth = authCheck();
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isUserAuth){?>
+                    <?php
+                    if(!$isUserAuth){?>
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
@@ -100,6 +101,14 @@ $isUserAuth = authCheck();
                                 <label class="col-sm-4 control-label">Пароль:</label>
                                 <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
+                            <!-- ERROR begin -->
+                            <?php if(isset($_SESSION['login_error']) && !empty($_SESSION['login_error'])){?>
+                            <div class="form-group form-inline">
+                                <div class="alert alert-danger" role="alert"><?=$_SESSION['login_error']?></div>
+                            </div>
+                            <?php }
+                            unset($_SESSION['login_error']);?>
+                            <!-- ERROR end -->
                             <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
                                 <button type="submit" class="btn btn-default">Войти</button>
@@ -126,7 +135,6 @@ $isUserAuth = authCheck();
                     </thead>
                     <tbody>
                     <?php
-
                     foreach($autos as $autodata1){
                         ?><tr><td><?=$autodata1['model']['name']?></td><td><?=$autodata1['model']['year']?></td><td><?=$autodata1['model']['power']?>л.с.</td><td><?=$autodata1['model']['run']?>км</td><td><?=$autodata1['price']['value']?>руб.<br><?=$cities[$autodata1['cityCode']]['name']?></td></tr><?php
                     }
@@ -138,6 +146,7 @@ $isUserAuth = authCheck();
             <div class="row bt">
                 <br>
                 <?
+                var_dump($_SESSION['login_error']);
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
                 &copy; <?=date('Y'); ?> Morda inc. by Ivan

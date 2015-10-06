@@ -91,7 +91,6 @@ return $userdata;
 }
 function log_in(){
     if(isset($_POST['login']) && isset($_POST['password'])){
-
         $login = $_POST['login'];
         $password = $_POST['password'];
         if(
@@ -105,12 +104,14 @@ function log_in(){
                 {
                     setcookie( "user", $login. ':'.md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userdata['salt'].$saltpassword), time() + 60*60*24*30, '/');
                 }
+                else return $_SESSION['login_error'] = 'Неверные логин и/или пароль';
             }
         }
+        else return $_SESSION['login_error'] = 'Неверные логин и/или пароль';
     }
+
 }
 function authCheck(){
-
     if(isset($_COOKIE['user'])){
         $userCookie = $_COOKIE['user'];
         $arUserCookie = explode(':',$userCookie);
