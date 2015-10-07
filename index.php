@@ -146,7 +146,6 @@ $isUserAuth = authCheck();
             <div class="row bt">
                 <br>
                 <?
-                var_dump($_SESSION['login_error']);
                 date_default_timezone_set('America/Los_Angeles');
                 ?>
                 &copy; <?=date('Y'); ?> Morda inc. by Ivan
