@@ -56,8 +56,8 @@ class BookProduct extends ShopProduct {
     }
 
     function getSummary() {
-        $summary = parent::getSummary() . "<br>";
-        $summary .= 'Кол-во стр ' . $this->numberOfPages;
+        $summary = parent::getSummary();
+        $summary .= 'Кол-во стр ' . $this->numberOfPages . "<br>";
         return $summary;
     }
 }
@@ -79,8 +79,8 @@ class CDProduct extends ShopProduct {
     }
 
     function getSummary() {
-        $summary = parent::getSummary() . "<br>";
-        $summary .= 'Длина звучания ' . $this->playLength . ' минут';
+        $summary = parent::getSummary();
+        $summary .= 'Длина звучания ' . $this->playLength . ' минут' . "<br>";
         return $summary;
     }
 }
@@ -89,23 +89,27 @@ class Wrong {
 
 }
 
-
 class ShopProductWriter {
-
-    function write(ShopProduct $product) {
-        //...
-        echo $product->getSummary() . "<br>";
-
+    private $products = array();
+    public function add(ShopProduct $product){
+        $this->products[] = $product;   }
+    public function write() {
+        foreach ($this->products as $product) {
+            echo $product->getSummary() . "<br>";
+        }
     }
 }
 
 $book = new BookProduct('Анна Коренина', 'Лев', 'Толстой', 150, 1000);
 $cd = new CDProduct('A kind of magic', 'Queen', 'Band', 250, 120);
-
-$writer  = new ShopProductWriter();
-$writer->write($book);
+$products = new ShopProductWriter();
+$products ->add($book);
+$products ->add($cd);
+$products ->write();
+//$writer  = new ShopProductWriter();
+//$writer->write();
 echo "<br>";
-$writer->write($cd);
+//$writer->write($cd);
 echo "<br>";
 
 //$wrong = new Wrong();
