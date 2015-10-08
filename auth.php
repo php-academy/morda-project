@@ -6,25 +6,7 @@
  * Time: 20:17
  */
 //print_r($_POST);
-$users = require( __DIR__ . '/data/dbUsers.php');
-if(isset($_POST['login']) && isset($_POST['password'])){
-    $login = $_POST['login'];
-    $password = $_POST['password'];
-    $saltpassword = md5($users[$login]['salt'].$_POST['password']);
-
-    if(
-    preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
-    preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
-    ) {
-        if(
-            isset($users[$login]) &&
-            ($users[$login]['saltpassword'] == $saltpassword)
-        ) {
-            setcookie( "user", $login. ':'.md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$users[$login]['salt'].$saltpassword), time() + 60*60*24*30, '/');
-        }
-//        $login;
-//        $password;
-    }
-}
-
+require(__DIR__ . '/data/project_functions.php');
+session_start();
+log_in();
 header('Location: /');

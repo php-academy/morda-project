@@ -65,85 +65,63 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
 
 function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do){
 $ar_auto = array();
-    $ar_city = array();
-    $ar_city=distance_cities($cities,$currentCity,$needDistance);
     foreach($dbAuto as $dataauto){
 
-            if ((in_array($dataauto['cityCode'],$ar_city)
-                && (!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
+            if ((!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
                 && (!isset($isAutoTrans) || ($dataauto['model']['isAutoTrans'] == $isAutoTrans))
                 && (!isset($price_ot) || ($dataauto['price']['value'] > ($price_ot * 1000)))
                 && (!isset($price_do) || ($dataauto['price']['value'] < ($price_do * 1000)))
                 && (!isset($year_ot) || ($dataauto['model']['year'] >= $year_ot))
                 && (!isset($year_do) || ($dataauto['model']['year'] <= $year_do))
-                && (!isset($needDistance) || ($needDistance <= $year_do))
-            )) {
+                && ($needDistance >= calculateTheDistance($cities, $currentCity, $dataauto['cityCode']))
+            ) {
                 $ar_auto[] = $dataauto;
             }
-
     }
     return $ar_auto;
 }
-   /* $ar_city=array();
-    $ar_auto=array();
 
-    $ar_city=distance_cities($cities,$currentCity,$needDistance);
-    if(!empty($ar_city)){
-        foreach($ar_city as $cityCode){
-            foreach($dbAuto as $auto){
-                if(in_array($auto['cityCode'],$ar_city)){
-                    if((!isset($is4wd) || ($auto['model']['is4wd']==$is4wd))
-                    && (!isset($isAutoTrans) || ($auto['model']['isAutoTrans']==$isAutoTrans))
-                    && (!isset($price_ot) || ($auto['price']['value']>=$price_ot*1000))
-                    && (!isset($price_do) || ($auto['price']['value']<=$price_do*1000))
-                    && (!isset($year_ot) || ($auto['model']['year']>=$year_ot))
-                    && (!isset($year_do) || ($auto['model']['year']<=$year_do))){
-                        $ar_auto[]=$auto;
-                    }
-                }
-            }
-        }
-
-
+function getuser($login){
+    $dbusers = require(__DIR__ . '/dbUsers.php');
+    if (isset($dbusers[$login])){
+        $userdata = $dbusers[$login];
     }
-    else{
-        $ar_auto['error']='Машины не найдены';
-    }
-    if(empty($ar_auto)){
-        $ar_auto['error']='Машины не найдены';
-    }
-    return $ar_auto;*/
-
-
-function distance_cities($cities,$currentCity,$needDistance){
-    $ar_city = array();
-    foreach ($cities as $name => $val) {
- //       $citycode=$name;
-        if (calculateTheDistance($cities, $currentCity, $name) <= $needDistance) {
-            $ar_city[] = $name;
-        }
-    }
-    return $ar_city;
-}
-/*
-function getuser($dbusers,$login){
-    $userdata = array();
-    if (in_array($dbusers, $login)){
-        foreach($dbusers[$login] as $data){
-            $userdata[] = $data;
-        }
-    }
-    else
+    else return false;
 return $userdata;
 }
-/*
-function filter($dbAuto, $currCity) {
-        $result = array();
-        foreach($dbAuto as $autoData) {
-                if( $autoData['cityCode'] == $currCity ) {
-                        $result[] = $autoData;
-                    }
+function log_in(){
+    if(isset($_POST['login']) && isset($_POST['password'])){
+        $login = $_POST['login'];
+        $password = $_POST['password'];
+        if(
+            preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+            preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+        ) {
+            $userdata = getuser($login);
+            if($userdata){
+                $saltpassword = md5($userdata['salt'].$_POST['password']);
+                if($userdata['saltpassword'] == $saltpassword)
+                {
+                    setcookie( "user", $login. ':'.md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userdata['salt'].$saltpassword), time() + 60*60*24*30, '/');
+                }
+                else return $_SESSION['login_error'] = 'Неверные логин и/или пароль';
+            }
+        }
+        else return $_SESSION['login_error'] = 'Неверные логин и/или пароль';
     }
-    return $result;
+
 }
-*/
+function authCheck(){
+    if(isset($_COOKIE['user'])){
+        $userCookie = $_COOKIE['user'];
+        $arUserCookie = explode(':',$userCookie);
+        $saltPasswordCookie = $arUserCookie[1];
+        if (getuser($arUserCookie[0])){
+            $userData = getuser($arUserCookie[0]);
+            $saltpassword = md5($_SERVER['HTTP_USER_AGENT'].$_SERVER['REMOTE_ADDR'].date("d.m.Y").$userData['salt'].$userData['saltpassword']);
+            if($saltPasswordCookie == $saltpassword){
+               return $isUserAuth = true;
+            }
+        }
+    }
+}
