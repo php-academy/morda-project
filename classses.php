@@ -155,3 +155,19 @@ $b = new B();
 echo $b->b();
 echo "\n";
 */
+
+class Math{
+    static $eps = 1e-6;
+    public static function div($x,$y){
+        if($y==0){
+            throw new Exception("Division by zero");
+        }
+        else return $x/$y;
+    }
+}
+try{
+    echo Math::div(2,0)."<br>";
+} catch (Exception $a){
+    print_r($a);
+    echo "Введи все что угодно только не ноль";
+}
