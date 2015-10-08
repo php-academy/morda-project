@@ -161,3 +161,26 @@ echo $b->b();
 echo "\n";
 */
 
+class MathException extendts Exception{
+
+}
+
+
+class Math{
+    public static function div($x,$y){
+        if($y==0){
+            throw new MathException('На ноль делить нельзя');
+        }
+        return $x/$y;
+    }
+    public static function eps($x,$y){
+       $eps=1e-6;
+
+    }
+}
+
+try{
+  echo Math::div(3,2);
+}catch MathException($e){
+
+}
