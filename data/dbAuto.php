@@ -8,6 +8,7 @@
  */
 return array(
     array(
+        'id'=>1,
         'model' => array(
             'name'  		=> 'Toyota Noah',
             'year'  		=> 2010,
@@ -23,6 +24,7 @@ return array(
         'cityCode' => 'nsk',
     ),
     array(
+        'id'=>2,
         'model' => array(
             'name'  		=> 'Nissan March',
             'year'  		=> 2009,
@@ -38,6 +40,7 @@ return array(
         'cityCode' => 'nsk',
     ),
     array(
+        'id'=>3,
         'model' => array(
             'name'  		=> 'Nissan Navara',
             'year'  		=> 2008,
@@ -53,6 +56,7 @@ return array(
         'cityCode' => 'krsk',
     ),
     array(
+        'id'=>4,
         'model' => array(
             'name'  		=> 'Toyota RAV4',
             'year'  		=> 2011,
@@ -68,6 +72,7 @@ return array(
         'cityCode' => 'brnl',
     ),
     array(
+        'id'=>5,
         'model' => array(
             'name'  		=> 'Chevrolet Niva',
             'year'  		=> 2014,
@@ -83,6 +88,7 @@ return array(
         'cityCode' => 'tsk',
     ),
     array(
+        'id'=>6,
         'model' => array(
             'name'  		=> 'Renault Duster',
             'year'  		=> 2015,

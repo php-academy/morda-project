@@ -6,29 +6,19 @@ $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
 $users = require( __DIR__ . '/data/dbusers.php');
 
-//echo md5('pdofig123456').'<br>';
-//echo md5('pdoifgqwerty');
-
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
 //POST данные для поиска
 
-$distance = getPostParam('distance');
+$search=getPostParam();
+$checked=isChecked($search);
 
-$wd=getPostParam('wd');
-$wdchecked=isChecked($wd);
+//var_dump($search);
 
-$autotrans=getPostParam('autotrans');
-$autchecked=isChecked($autotrans);
-
-///////////////
+$autos = filter($autos,$cities,$currentCity,$search);
 
 $isUserAuth=isAuth();
-
-$error=isError();
-
-$autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
 
 
 ?>
@@ -67,27 +57,27 @@ $autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Цена:</label>
-                                <input placeholder="цена от" class="form-control">
+                                <input placeholder="цена от" class="form-control" name="price1" value="<?=$search['price1']?>">
                                 -
-                                <input placeholder="цена до" class="form-control">
+                                <input placeholder="цена до" class="form-control" name="price2" value="<?=$search['price2']?>">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Год:</label>
-                                <input placeholder="год от" class="form-control">
+                                <input placeholder="год от" class="form-control" name="year1" value="<?=$search['year1']?>">
                                 -
-                                <input placeholder="год до" class="form-control">
+                                <input placeholder="год до" class="form-control" name="year2" value="<?=$search['year2']?>">
                             </div>
                             <div class="form-group form-inline">
                                 <label class="col-sm-2 control-label">Расстояние от меня:</label>
-                                <input placeholder="расстояние" name="distance" class="form-control" value="<?=$distance?>">
+                                <input placeholder="расстояние" name="distance" class="form-control" value="<?=$search['distance']?>">
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox" name="autotrans" value="true" <?=$autchecked?>>Автомат</label>
+                                <label><input type="checkbox" name="autotrans" value="true" <?=$checked['autotrans']?>>Автомат</label>
                             </div>
                             <div class="checkbox">
                                 <div class="col-sm-2"></div>
-                                <label><input type="checkbox" name="wd" value="true" <?=$wdchecked?>>4WD</label>
+                                <label><input type="checkbox" name="wd" value="true" <?=$checked['wd']?>>4WD</label>
                             </div>
                             <div class="form-group form-inline">
                                 <button type="submit" class="btn btn-default">Найти</button>
@@ -96,14 +86,14 @@ $autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isUserAuth){?>
+                    <?php if(!$isUserAuth['is_auth']){?>
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
-                            <?php if($error){?>
+                            <?php if($isUserAuth['error']){?>
                                 <div>
                                     <label class="error">
-                                        <?=$error?>
+                                        <?=$isUserAuth['error']?>
                                     </label>
                                 </div>
                             <?php } ?>
@@ -145,7 +135,7 @@ $autos = filter($autos,$cities,$currentCity,$distance,$wd,$autotrans);
                     foreach( $autos as $autoData ) {
                         ?>
                         <tr>
-                            <td><?=$autoData['model']['name']?></td>
+                            <td><a href="/auto_detail.php?id=<?=$autoData['id']?>"><?=$autoData['model']['name']?></a></td>
                             <td><?=$autoData['model']['year']?></td>
                             <td><?=$autoData['model']['power']?> л.c.</td>
                             <td><?=$autoData['model']['run']?></td>
