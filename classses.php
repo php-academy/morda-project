@@ -92,28 +92,30 @@ class Wrong {
 
 class ShopProductWriter {
 
-    function __construct(){
-        $
-    }
-    private $products=array();
-    function write(ShopProduct $product) {
-        //...
-        echo $product->getSummary() . "\n";
+    protected $products=array();
 
+    function write() {
+        foreach($this->products as $product){
+            echo $product->getSummary() . "<br>";
+        }
     }
-    function add($products){
-        $products[]=$this->product;
+    function add($product){
+        $this->products[]=$product;
     }
 }
+
 
 $book = new BookProduct('Анна Коренина', 'Лев', 'Толстой', 150, 1000);
 $cd = new CDProduct('A kind of magic', 'Queen', 'Band', 250, 120);
 
 $writer  = new ShopProductWriter();
-$writer->write($book);
+
+$writer->add($book);
+$writer->add($cd);
+$writer->write();
 echo "\n";
-$writer->write($cd);
-echo "\n";
+//$writer->write($cd);
+
 
 //$wrong = new Wrong();
 //$writer->write($wrong);
@@ -158,6 +160,4 @@ $b = new B();
 echo $b->b();
 echo "\n";
 */
-
-
 

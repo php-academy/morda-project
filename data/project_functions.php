@@ -72,18 +72,18 @@ function calculateTheDistance ($lat1, $long1, $lat2, $long2) {
     return $dist;
 }
 
-function filter(array $dbAuto, array $dbCity,$currCityCode,$needDistance,$is4wd,$isAutoTrans){
 
-    $ar_city=array();
+function filter(array $dbAuto, array $dbCity,$currCityCode,$search){
+
     $ar_auto=array();
 
-    $ar_city=distance_cities($dbCity,$currCityCode,$needDistance);
+    $ar_city=distance_cities($dbCity,$currCityCode,$search['distance']);
     # насколько я увидел $currCityCode - не попадает в список городов, по которым происходит поиск
     # нужно искать в текущем и всех остальных, которые удовлетворяют расстоянию
     if(!empty($ar_city)){
         foreach($dbAuto as $auto){
             if(in_array($auto['cityCode'], $ar_city)){
-                if($auto['model']['is4wd']==$is4wd && $auto['model']['isAutoTrans']==$isAutoTrans){
+                if($auto['model']['is4wd']==$search['wd'] && $auto['model']['isAutoTrans']==$search['autotrans']){
                     $ar_auto[]=$auto;
                 }
             }
@@ -125,7 +125,7 @@ function distance_cities($dbCity,$currCityCode,$needDistance){
 
         $distance=calculateTheDistance($lat_curr, $long_curr, $lat_other_city, $long_other_city)/1000;
 
-        if($distance<$needDistance){
+        if($distance<=$needDistance){
             $ar_city[]=$codeCity;
             //$ar_city[$codeCity]=$distance;
         }
@@ -143,10 +143,99 @@ function get_user_by_login($login){
     }
 }
 
-function getPostParam($param) {
+/*function getPostParam($param) {
     if( isset($_POST[$param]) ) {
         return $_POST[$param];
     } else {
         return false;
+    }
+}*/
+
+function getPostParam() {
+    $ar_post=array();
+    if(isset($_POST)) {
+        foreach ($_POST as $param => $value) {
+            if (isset($value)) {
+                if($param=='autotrans'){
+                    $ar_post['autotrans']=true;
+                }elseif ($param=='wd'){
+                    $ar_post['wd']=true;
+                }else {
+                    $ar_post[$param] = (int)$value;
+                }
+            }
+        }
+        if(is_null($ar_post['autotrans'])){
+            $ar_post['autotrans']=false;
+        }
+        if(is_null($ar_post['wd'])){
+            $ar_post['wd']=false;
+        }
+        return $ar_post;
+    }else{
+        return NULL;
+    }
+}
+
+function isChecked($search){
+
+    if ($search['autotrans']) {
+        $checked['autotrans'] = 'checked';
+    } else {
+        $checked['autotrans'] = '';
+    }
+
+    if ($search['wd']) {
+        $checked['wd'] = 'checked';
+    } else {
+        $checked['wd'] = '';
+    }
+    return $checked;
+}
+
+function isAuth(){
+    //$isUserAuth=false;
+    $isUserAuth=array('is_auth'=>false);
+    if (isset($_COOKIE['user'])) {
+        $arUserCookie = explode(':', $_COOKIE['user']);
+        $login = $arUserCookie[0];
+        $md5hash = $arUserCookie[1];
+        $user=get_user_by_login($login);
+        if($user){
+            $salt_password=$user['salt_password'];
+            $salt=$user['salt'];
+            $hash=hash_password($salt,$salt_password);
+            if ($hash == $md5hash) {
+                $isUserAuth['is_auth'] = true;
+            }
+        }
+    }
+    if( isset($_GET['logout']) ) {
+        if($_GET['logout']==1){
+            setcookie( "user", $login. ':'. md5($password), time(), '/');
+            $isUserAuth['is_auth']=false;
+        }
+    }
+    if (isset($_SESSION['error'])) {
+        $isUserAuth['error'] = $_SESSION['error'];
+        unset($_SESSION['error']);
+    }
+    return $isUserAuth;
+}
+
+function hash_password($salt,$salt_password){
+    $user_agent=$_SERVER['HTTP_USER_AGENT'];
+    $ip=$_SERVER['REMOTE_ADDR'];
+    $date=date('d.m.Y');
+    $hash=md5($user_agent.$ip.$date.$salt.$salt_password);
+    return $hash;
+}
+
+function getAutoById($id){
+    $autos  = require(__DIR__ . '/dbAuto.php');
+    foreach($autos as $autoData){
+        if($autoData['id']==$id){
+            return $autoData;
+        }
     }
 }
