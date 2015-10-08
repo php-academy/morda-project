@@ -1,30 +1,14 @@
 <?php
+session_start();
+date_default_timezone_set('America/Los_Angeles');
 require(__DIR__ . '/data/project_functions.php');
-$cities = require(__DIR__ . '/data/dbCity.php');
-$autos  = require(__DIR__ . '/data/dbAuto.php');
-$users  = require(__DIR__ . '/data/dbUsers.php');
+$cities = require(__DIR__.'/data/dbCity.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
-$autos = filter($autos, $currentCity);
-
-
-$isUserAuth = false;
-if( isset($_COOKIE['user']) ) {
-    $userCookie = $_COOKIE['user'];
-    $arUserCookie = explode(':', $userCookie);
-    $login = $arUserCookie[0];
-    $md5password = $arUserCookie[1];
-
-    if( isset($users[$login]) ) {
-        $password = $users[$login]['password'];
-        if( md5($password) == $md5password ) {
-            $isUserAuth = true;
-        }
-    }
-}
-
+$autos = get_autos($currentCity);
+$login = authorize();
 
 ?>
 <!DOCTYPE html>
@@ -90,9 +74,9 @@ if( isset($_COOKIE['user']) ) {
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isUserAuth) { ?>
+                    <?php if(!$login) { ?>
                     <!-- Not authorized user -->
-                    <form action="/auth.php" method="post">
+                    <form action="/auth.php?action=login" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
@@ -103,17 +87,24 @@ if( isset($_COOKIE['user']) ) {
                                 <input name="password" type="password" placeholder="Пароль" class="form-control">
                             </div>
                             <div class="form-group form-inline">
+                                <?php if( isset($_SESSION['login']['error']) ) {
+                                    ?><div class="alert alert-danger" role="alert"><?=$_SESSION['login']['error'];?></div><?
+                                    unset($_SESSION['login']['error']);
+                                }  ?>
+                            </div>
+                            <div class="form-group form-inline">
                                 <div class="col-sm-4"></div>
                                 <button type="submit" class="btn btn-default">Войти</button>
                             </div>
                         </fieldset>
                     </form>
+
                     <!-- Not authorized user -->
                     <?php } else { ?>
                     <!-- Authorized user -->
                     <i class="glyphicon glyphicon-user"> <?=$login?></i>
                     <br>
-                    <a href="#">Выход</a>
+                    <a href="/auth.php?action=logout">Выход</a>
                     <!-- Authorized user -->
                     <?php } ?>
                 </div>
@@ -129,7 +120,7 @@ if( isset($_COOKIE['user']) ) {
                     <tbody>
                     <?php
                     foreach( $autos as $autoData ) {
-                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td><?php
+                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($autoData['cityCode'])?></td><?php
                     }
                     ?>
                     </tbody>

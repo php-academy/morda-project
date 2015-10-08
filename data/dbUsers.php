@@ -7,11 +7,11 @@
  */
 return array(
     'vasya' => array(
-        'login' => 'vasya',
-        'password' => '123456',
+        'salt_password' => '95d776ce33aef2df2595d04dd40289c5',
+        'salt'          => 'dslkfm',
     ),
     'petya' => array(
-        'login' => 'petya',
-        'password' => 'qwerty',
+        'salt_password' => 'dc606708a2f1d6d432f766c5ba667102',
+        'salt'          => 'sdlflk',
     ),
 );
