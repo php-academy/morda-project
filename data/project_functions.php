@@ -82,9 +82,10 @@ function filter(array $dbAuto, array $dbCity,$currCityCode,$search){
     # нужно искать в текущем и всех остальных, которые удовлетворяют расстоянию
     if(!empty($ar_city)){
         foreach($dbAuto as $auto){
+            $i++;
             if(in_array($auto['cityCode'], $ar_city)){
                 if($auto['model']['is4wd']==$search['wd'] && $auto['model']['isAutoTrans']==$search['autotrans']){
-                    $ar_auto[]=$auto;
+                    $ar_auto[$i]=$auto;
                 }
             }
         }
@@ -233,9 +234,15 @@ function hash_password($salt,$salt_password){
 
 function getAutoById($id){
     $autos  = require(__DIR__ . '/dbAuto.php');
-    foreach($autos as $autoData){
-        if($autoData['id']==$id){
-            return $autoData;
-        }
+    return $autos[$id-1];
+}
+
+function auto_handler(&$auto){
+   if($auto['model']['isAutoTrans']==true){
+       $auto['model']['isAutoTrans']='Автомат';
+   }
+    if($auto['model']['is4wd']==true){
+        $auto['model']['is4wd']='4WD';
     }
+    $auto['model']['run']=floor($auto['model']['run']/1000);
 }

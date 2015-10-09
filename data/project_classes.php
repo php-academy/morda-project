@@ -74,7 +74,7 @@ $coord2=new Coordinate(56.01,93.04);
 $city1=new City('nsk','Novosibirsk',$coord1);
 $city2=new City('krsk','Krasnoyarsk',$coord2);
 
-echo $city1->getDistanceTo(City $city2);
+echo $city1->getDistanceTo($city2);
 
 //var_dump($coord1);
 

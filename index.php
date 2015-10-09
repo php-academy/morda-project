@@ -132,10 +132,10 @@ $isUserAuth=isAuth();
                     </thead>
                     <tbody>
                     <?php
-                    foreach( $autos as $autoData ) {
+                    foreach( $autos as $id=>$autoData ) {
                         ?>
                         <tr>
-                            <td><a href="/auto_detail.php?id=<?=$autoData['id']?>"><?=$autoData['model']['name']?></a></td>
+                            <td><a href="/auto_detail.php?id=<?=$id?>"><?=$autoData['model']['name']?></a></td>
                             <td><?=$autoData['model']['year']?></td>
                             <td><?=$autoData['model']['power']?> л.c.</td>
                             <td><?=$autoData['model']['run']?></td>
