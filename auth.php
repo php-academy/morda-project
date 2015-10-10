@@ -56,6 +56,8 @@ if ( isset($_GET['action']) ) {
     $action = $_GET['action'];
     if ($action == 'logout') {
         setcookie( "user", '', time() - 10, '/');
+        unset($_SESSION['login_error']);
+        unset($_SESSION['login']);
     }
 }
 
