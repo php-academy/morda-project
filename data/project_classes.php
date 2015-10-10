@@ -83,3 +83,133 @@ class City {
         return DistanceCalculator::getDistance($this->coord, $c->coord);
     }
 }
+
+class Price {
+    public $value;
+    public $currency;
+
+    /**
+     * Price constructor.
+     * @param float $value
+     * @param string $currency
+     */
+    public function __construct($value, $currency)
+    {
+        $this->value = $value;
+        $this->currency = $currency;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPriceString() {
+        switch($this->currency) {
+            case 'RUB':
+                return "{$this->value} &#8381;";
+            case 'USD':
+                return "{$this->value} $";
+            case "EUR":
+                return "{$this->value} &euro;";
+            default:
+                return "{$this->value} {$this->currency}";
+        }
+    }
+}
+
+class Auto {
+
+    public $name;
+    public $year;
+    public $run;
+    public $power;
+    public $isAutoTrans;
+    public $is4wd;
+
+    /**
+     * AutoAd constructor.
+     * @param string $name
+     * @param integer $year
+     * @param float $run
+     * @param integer $power
+     * @param bool $isAutoTrans
+     * @param bool $is4wd
+     */
+    public function __construct($name, $year, $run, $power, $isAutoTrans, $is4wd)
+    {
+        $this->name = $name;
+        $this->year = $year;
+        $this->run = $run;
+        $this->power = $power;
+        $this->isAutoTrans = $isAutoTrans;
+        $this->is4wd = $is4wd;
+    }
+}
+
+class AutoAdd {
+
+    public $auto;
+    public $cityCode;
+    public $price;
+
+    /**
+     * AutoAdd constructor.
+     * @param Auto $auto
+     * @param string $cityCode
+     * @param Price $price
+     */
+    public function __construct($auto, $cityCode, $price)
+    {
+        $this->auto = $auto;
+        $this->cityCode = $cityCode;
+        $this->price = $price;
+    }
+}
+
+class User {
+    public $login;
+    protected $_salt;
+    protected $_saltPassword;
+
+    /**
+     * User constructor.
+     * @param string $login;
+     * @param string $salt
+     * @param string $saltPassword
+     */
+    public function __construct($login, $salt, $saltPassword) {
+        $this->login = $login;
+        $this->_salt = $salt;
+        $this->_saltPassword = $saltPassword;
+    }
+
+    public function init($password) {
+        $this->_salt = $this->_generateSalt();
+        $this->_saltPassword = md5($this->_salt . $password);
+    }
+
+    public function validateUserByCookieHash($cookieHash) {
+        return $this->getUserCookieHash() == $cookieHash;
+    }
+
+    public function validateUserByPassword($password) {
+        return $this->_saltPassword == md5($this->_salt . $password);
+    }
+
+    protected function _generateSalt() {
+        $s = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        $s = str_shuffle($s);
+        return substr($s, 0, 8);
+    }
+
+    public function getUserCookieHash() {
+        return md5(
+            $_SERVER['REMOTE_ADDR'] .
+            $_SERVER['HTTP_USER_AGENT'] .
+            date('Y-m-d') .
+            $this->_saltPassword .
+            $this->_salt
+        );
+    }
+
+
+}
