@@ -1,9 +1,10 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-
+$autos = require(__DIR__ . '/data/dbAuto.php');
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+$autos = $autos[$_GET['id']];
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,16 +58,15 @@ set_curr_city($currentCity);
         ?>
         <ol class="breadcrumb">
             <li><a href="#">Главная</a></li>
-            <li class="active">Toyota Noah</li>
+            <li class="active"><?=$autos['model']['name']?></li>
         </ol>
 
         <div class="col-xs-1"><strong>Модель:</strong></div>
-        <div class="col-xs-11">
-            Toyota Noah 2009г.<br>
-            67 тыс. км.<br>
-            143 л.c.<br>
-            Автомат<br>
-            4WD
+        <div class="col-xs-11"><?php
+            foreach($autos['model'] as $data){
+
+            }
+            ?>
         </div>
 
         <div class="col-xs-1"><strong>Цена:</strong></div>
@@ -78,6 +78,8 @@ set_curr_city($currentCity);
     <div class="row bt">
         <br>
         <?
+        echo $_GET['id'].'<br>';
+        print_r( $autos[1]['model']);
         date_default_timezone_set('America/Los_Angeles');
         ?>
         &copy; <?=date('Y'); ?> Morda inc. by Boris

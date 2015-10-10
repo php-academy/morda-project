@@ -65,6 +65,7 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
 
 function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do){
 $ar_auto = array();
+    $i=0;
     foreach($dbAuto as $dataauto){
 
             if ((!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
@@ -75,8 +76,10 @@ $ar_auto = array();
                 && (!isset($year_do) || ($dataauto['model']['year'] <= $year_do))
                 && ($needDistance >= calculateTheDistance($cities, $currentCity, $dataauto['cityCode']))
             ) {
-                $ar_auto[] = $dataauto;
+
+                $ar_auto[$i] = $dataauto;
             }
+        $i++;
     }
     return $ar_auto;
 }

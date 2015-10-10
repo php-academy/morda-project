@@ -5,26 +5,70 @@
  * Date: 08.10.2015
  * Time: 20:38
  */
-/*
+
 class Auto{
     public $name;
     public $year;
     public $run;
+    public $power;
     public $isAutoTrans;
     public $is4wd;
-    public $price;
-    public $cityCode;
-    function __construct(
-        $name,
-        $year,
-        $run,
-        $isAutoTrans,
-        $is4wd,
-        $price,
-        $cityCode){
+    function __construct($name, $year, $run, $power, $isAutoTrans, $is4wd){
+        $this->name = $name;
+        $this->year = $year;
+        $this->run = $run;
+        $this->power = $power;
+        $this->isAutoTrans = $isAutoTrans;
+        $this->is4wd = $is4wd;
     }
 }
-*/
+class AutoAd{
+    public $name;
+    public $cityCode;
+    public $price;
+    function __construct($name, $cityCode,Price $price){
+        $this->name = $name;
+        $this->year = $cityCode;
+        $this->run = $price;
+    }
+}
+class Price{
+    public $price;
+    public $currancy;
+    function __construct($price,$currancy){
+        $this->price = $price;
+        $this->currancy = $currancy;
+    }
+    function getPriceString(){
+        switch ($this->currancy) {
+            case 'RUB':
+                return "{$this->price} &#8381;";
+                break;
+            case 'EUR':
+                return "{$this->price} &euro;";
+                break;
+            case 'USD':
+                return "{$this->price} $";
+                break;
+            default: return "{$this->price} {$this->currancy}";
+        }
+    }
+}
+class User{
+    public $login;
+    protected $salt;
+    protected $saltPassword;
+    function __construct($login, $salt, $saltPassword){
+        $this->login = $login;
+        $this->salt = $salt;
+        $this->saltPassword = $saltPassword;
+    }
+    function init($password){
+        $salt = $this->salt;
+
+
+    }
+}
 class City{
     public $code;
     public $name;
@@ -36,9 +80,7 @@ class City{
         $this->coordinate = $coordinate;
     }
     public  function getDistanceTo(City $c){
-        $x = $this->coordinate;
-        $y = $c->coordinate;
-        return DistanceCalculator::getDistance($x,$y);
+        return DistanceCalculator::getDistance($this->coordinate,$c->coordinate);
     }
 }
 
@@ -60,13 +102,13 @@ class DistanceCalculator{
         $long1 = $x->long;
         $lat2 = $y->lat;
         $long2 = $y->long;
-        // перевести координаты в радианы
+        // РїРµСЂРµРІРµСЃС‚Рё РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ СЂР°РґРёР°РЅС‹
         $lat1 = $lat1 * M_PI / 180;
         $lat2 = $lat2 * M_PI / 180;
         $long1 = $long1 * M_PI / 180;
         $long2 = $long2 * M_PI / 180;
 
-        // косинусы и синусы широт и разницы долгот
+        // РєРѕСЃРёРЅСѓСЃС‹ Рё СЃРёРЅСѓСЃС‹ С€РёСЂРѕС‚ Рё СЂР°Р·РЅРёС†С‹ РґРѕР»РіРѕС‚
         $cl1 = cos($lat1);
         $cl2 = cos($lat2);
         $sl1 = sin($lat1);
@@ -75,7 +117,7 @@ class DistanceCalculator{
         $cdelta = cos($delta);
         $sdelta = sin($delta);
 
-        // вычисления длины большого круга
+        // РІС‹С‡РёСЃР»РµРЅРёСЏ РґР»РёРЅС‹ Р±РѕР»СЊС€РѕРіРѕ РєСЂСѓРіР°
         $y = sqrt(pow($cl2 * $sdelta, 2) + pow($cl1 * $sl2 - $sl1 * $cl2 * $cdelta, 2));
         $x = $sl1 * $sl2 + $cl1 * $cl2 * $cdelta;
 

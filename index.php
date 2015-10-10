@@ -136,7 +136,7 @@ $isUserAuth = authCheck();
                     <tbody>
                     <?php
                     foreach($autos as $autodata1){
-                        ?><tr><td><a href=/auto.php?id=<?=$i?>><?=$autodata1['model']['name']?></a></td><td><?=$autodata1['model']['year']?></td><td><?=$autodata1['model']['power']?>л.с.</td><td><?=$autodata1['model']['run']?>км</td><td><?=$autodata1['price']['value']?>руб.<br><?=$cities[$autodata1['cityCode']]['name']?></td></tr><?php
+                        ?><tr><td><a href=/auto.php?id=<?=array_search($autodata1,$autos)?>><?=$autodata1['model']['name']?></a></td><td><?=$autodata1['model']['year']?></td><td><?=$autodata1['model']['power']?>л.с.</td><td><?=$autodata1['model']['run']?>км</td><td><?=$autodata1['price']['value']?>руб.<br><?=$cities[$autodata1['cityCode']]['name']?></td></tr><?php
                         }
                     ?>
                     </tbody>

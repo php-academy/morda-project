@@ -156,7 +156,7 @@ echo $b->b();
 echo "\n";
 */
 
-class Math{
+/*class Math{
     static $eps = 1e-6;
     public static function div($x,$y){
         if($y==0){
@@ -171,3 +171,4 @@ try{
     print_r($a);
     echo "Введи все что угодно только не ноль";
 }
+*/
