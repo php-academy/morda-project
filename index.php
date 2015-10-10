@@ -137,7 +137,7 @@ setThisPage(); # Сетим текщую страницу для редирек�
                         # Выводим в табличку:    
                             ?>
                             <tr>
-                                <td><a href="/ads.php?id=<?=$id_ads;?>"><?=$carData['model']['name'];?></a></td>
+                                <td><a href="/auto.php?id=<?=$id_ads;?>"><?=$carData['model']['name'];?></a></td>
                                 <td><?=$carData['model']['year'];?></td>
                                 <td><?=$carData['model']['power'];?></td>
                                 <td><?=$carData['model']['run'];?></td>

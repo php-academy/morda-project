@@ -91,7 +91,7 @@ return array(
         'model' => array(
             'name'  		=> 'Renault Duster',
             'year'  		=> 2015,
-            'run'   		=> 0,
+            'run'   		=> 10,
             'power' 		=> 114,
             'isAutoTrans'	=> false,
             'is4wd'   		=> true,
