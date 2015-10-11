@@ -157,7 +157,7 @@ class AutoAdd {
      * @param string $cityCode
      * @param Price $price
      */
-    public function __construct($auto, $cityCode, $price)
+    public function __construct(Auto $auto, $cityCode, Price $price)
     {
         $this->auto = $auto;
         $this->cityCode = $cityCode;
@@ -165,6 +165,23 @@ class AutoAdd {
     }
 }
 
+/**
+ * Class User
+ *
+ * Создайте класс User.
+Поля класса:
+- логин;
+- salt;
+- saltPassword;
+- поля salt и saltPassword закрытые;
+Методы класса:
+- конструктор;
+- init($password) - метод принимает на вход пароль пользователя и инициализирует поля класса $salt - случайныой строкой и $saltPassword - склеиваем соль и переданный пароль и берем от этого md5;
+- validateUserPassword($password) - метод принимает на вход пароль переданный при авторизации и проверяет его валидность, т.е. что md5 от $salt пользователя и переданного пароля совпадает с $saltPassword пользователя;
+- getUserCookieHash() - метод генерирующий 2-у часть пользовательской куки так называемый hash, т.е. метод склеивает IP, User Agent, текущую дату, $saltPassword, $salt пользователя и возвращает md5 от склеенной cтроки;
+- validateUserByCookieHash($cookieHash) - метод принимает на вход 2ую часть user cookie (после ':') и проверяет ее корректность для пользователя, т.е. что md5 от склейки IP, User Agent-а, даты, $saltPassword и $salt совпадают с переданным $cookieHash;
+
+ */
 class User {
     public $login;
     protected $_salt;
@@ -182,11 +199,18 @@ class User {
         $this->_saltPassword = $saltPassword;
     }
 
+    /**
+     * @param string $password
+     */
     public function init($password) {
         $this->_salt = $this->_generateSalt();
         $this->_saltPassword = md5($this->_salt . $password);
     }
 
+    /**
+     * @param string $cookieHash
+     * @return bool
+     */
     public function validateUserByCookieHash($cookieHash) {
         return $this->getUserCookieHash() == $cookieHash;
     }
@@ -219,15 +243,72 @@ class DB {
     const DB_PASS = '';
 
     /**
-     * @return PDO
+     * @return false|PDO
      */
     public static function getConnection() {
         $host = self::DB_HOST;
         $name = self::DB_NAME;
-        return new PDO("mysql:host={$host};dbname={$name}", self::DB_USER, self::DB_PASS);
+
+
+        try {
+            $conn = new PDO("mysql:host={$host};dbname={$name}", self::DB_USER, self::DB_PASS);
+        } catch( Exception $e ) {
+            $conn = false;
+        }
+        return $conn;
     }
 
 }
+//DB::getConnection();
+
+
+class UserRepo {
+    const TABLE_NAME = 'user';
+
+    protected $_conn;
+
+    public function __construct() {
+        $this->_conn = DB::getConnection();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllUsers() {
+        $result = array();
+        $q = $this->_conn->query("SELECT * FROM " . self::TABLE_NAME, PDO::FETCH_ASSOC);
+        while( $r = $q->fetch() ) {
+            $result[$r['login']] = new User($r['login'], $r['salt'], $r['saltPassword']);
+
+        }
+        return $result;
+    }
+
+    /**
+     * @param $login
+     * @return bool|User
+     */
+    public function getUserByLogin($login) {
+        $table = self::TABLE_NAME;
+        $sql = "Select * from {$table} where login = :login";
+        $q = $this->_conn->prepare($sql);
+        $q->execute(array(
+            'login' => $login
+        ));
+
+        $r = $q->fetch();
+
+        if( $r ) {
+            return new User($r['login'], $r['salt'], $r['saltPassword']);
+        } else {
+            return false;
+        }
+    }
+}
+
+
+
+
 
 class CityRepository {
 
