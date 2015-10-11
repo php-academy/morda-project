@@ -7,7 +7,7 @@ date_default_timezone_set('America/Los_Angeles');
  * Date: 01.10.15
  * Time: 20:17
  */
-require(__DIR__ . '/data/project_functions.php');
+require(__DIR__ . '/data/project_classes.php');
 if( isset($_GET['action']) && $_GET['action'] == 'login' ) {
     User::login();
 } elseif( isset($_GET['action']) && $_GET['action'] == 'logout' ) {
