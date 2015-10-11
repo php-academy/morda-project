@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 require(__DIR__ . '/data/project_functions.php');
+require(__DIR__ . '/data/project_classes.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
 $users = require( __DIR__ . '/data/dbusers.php');
@@ -18,7 +19,11 @@ $checked=isChecked($search);
 
 $autos = filter($autos,$cities,$currentCity,$search);
 
-$isUserAuth=isAuth();
+//$isUserAuth=isAuth();
+
+
+$isAuth = false;
+$user=User::isAuth();
 
 
 ?>
@@ -86,7 +91,7 @@ $isUserAuth=isAuth();
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isUserAuth['is_auth']){?>
+                    <?php if(!$user){?>
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
@@ -114,7 +119,7 @@ $isUserAuth=isAuth();
                     <!-- Not authorized user -->
                     <?php } else {?>
                     <!-- Authorized user -->
-                    <i class="glyphicon glyphicon-user"><?=$login?></i>
+                    <i class="glyphicon glyphicon-user"><?=$user->login?></i>
                     <br>
                     <a href="/?logout=1">Выход</a>
                     <!-- Authorized user -->

@@ -155,7 +155,7 @@ class User{
         $this->saltPassword = md5($this->salt . $password);
     }
 
-    function validateUserPassword($password){
+    function validateUserByPassword($password){
         return $this->saltPassword == md5($this->salt . $password);
     }
     protected function _generateSalt() {
@@ -171,16 +171,66 @@ class User{
         return $hash;
     }
 
+    public function markUser() {
+        setcookie("user", $this->login . ':' . $this->getUserCookieHash(), time() + 60 * 60 * 24 * 30, '/');
+    }
+
+    public function unMarkUser() {
+        setcookie('user', '', time() - 60*60*24, '/');
+    }
+
+    public static function validatePostData() {
+        if( isset($_POST['login']) && isset($_POST['password']) ) {
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+
+            if (
+                preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+                preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
     function validateUserByCookieHash($cookieHash){
-        if(getUserCookieHash()==$cookieHash){
+        if($this->getUserCookieHash()==$cookieHash){
             return true;
         }
+    }
+    public static function parseUserCookie() {
+        if( isset($_COOKIE['user']) ) {
+            $userCookie = $_COOKIE['user'];
+            $arUserCookie = explode(':', $userCookie);
+            $login = $arUserCookie[0];
+            $cookieHash = $arUserCookie[1];
+            return array(
+                'login' => $login,
+                'cookieHash' => $cookieHash,
+            );
+        } else {
+            return false;
+        }
+    }
+    public static function isAuth(){
+        if( $arCookie = User::parseUserCookie() ) {
+            $userRepo = new UserRepo();
+            if( $user = $userRepo->getUserByLogin($arCookie['login']) ) {
+                if( $user->validateUserByCookieHash($arCookie['cookieHash']) ) {
+                    return $user;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return $user;
     }
 }
 
 class DB {
     const DB_HOST = 'localhost';
-    const DB_NAME = 'morda';
+    const DB_NAME = 'morda_project';
     const DB_USER = 'root';
     const DB_PASS = '';
 
@@ -210,18 +260,17 @@ class UserRepo{
     public function getUserByLogin($login){
 
         $table=self::TABLE_NAME;
-        $sql="SELECT login FROM {$table} WHERE login=:login";
+        $sql="SELECT * FROM {$table} WHERE login=:login";
         $q=$this->_conn->prepare($sql);
         $q->execute(array(
-            'login'=>$login;
+            'login'=>$login
         ));
         $r=$q->fetch();
         if($r){
-            return new User($r['login'],$r['salt'].$r['saltPassword']);
+            return new User($r['login'],$r['salt'],$r['saltPassword']);
         }else{
             return false;
         }
-
     }
     public function getAllUsers(){
 
