@@ -6,7 +6,21 @@
  * Time: 20:17
  */
 //print_r($_POST);
+require(__DIR__ . '/data/projectclasses.php');
 require(__DIR__ . '/data/project_functions.php');
-session_start();
-log_in();
+if( isset($_GET['action']) && $_GET['action'] == 'login' ) {
+    if( User::validatePostData() ) {
+        $userRepo = new UserRepo();
+        $user = $userRepo->getUserByLogin($_POST['login']);
+        if ( $user ) {
+            if ( $user->validateUserByPassword($_POST['password']) ) {
+                $user->markUser();
+            }
+        }
+
+    }
+} elseif( isset($_GET['action']) && $_GET['action'] == 'logout' ) {
+    $user = new User();
+    $user->unMarkUser();
+}
 header('Location: /');

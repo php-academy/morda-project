@@ -23,50 +23,190 @@ class Auto{
     }
 }
 class AutoAd{
-    public $name;
+    public $auto;
     public $cityCode;
     public $price;
-    function __construct($name, $cityCode,Price $price){
-        $this->name = $name;
+    function __construct(Auto $auto, $cityCode,Price $price){
+        $this->name = $auto;
         $this->year = $cityCode;
         $this->run = $price;
     }
 }
 class Price{
-    public $price;
+    public $value;
     public $currancy;
-    function __construct($price,$currancy){
-        $this->price = $price;
+    function __construct($value,$currancy){
+        $this->price = $value;
         $this->currancy = $currancy;
     }
     function getPriceString(){
         switch ($this->currancy) {
             case 'RUB':
-                return "{$this->price} &#8381;";
-                break;
+                return "{$this->value} &#8381;";
             case 'EUR':
-                return "{$this->price} &euro;";
-                break;
+                return "{$this->value} &euro;";
             case 'USD':
-                return "{$this->price} $";
-                break;
-            default: return "{$this->price} {$this->currancy}";
+                return "{$this->value} $";
+            default: return "{$this->value} {$this->currancy}";
         }
     }
 }
-class User{
+class User {
     public $login;
-    protected $salt;
-    protected $saltPassword;
-    function __construct($login, $salt, $saltPassword){
+    protected $_salt;
+    protected $_saltPassword;
+
+    /**
+     * User constructor.
+     * @param string $login;
+     * @param string $salt
+     * @param string $saltPassword
+     */
+    public function __construct($login = '', $salt = '', $saltPassword= '') {
         $this->login = $login;
-        $this->salt = $salt;
-        $this->saltPassword = $saltPassword;
+        $this->_salt = $salt;
+        $this->_saltPassword = $saltPassword;
     }
-    function init($password){
-        $salt = $this->salt;
+
+    public function init($password) {
+        $this->_salt = $this->_generateSalt();
+        $this->_saltPassword = md5($this->_salt . $password);
+    }
+
+    public function validateUserByCookieHash($cookieHash) {
+        return $this->getUserCookieHash() == $cookieHash;
+    }
+
+    public function validateUserByPassword($password) {
+        return $this->_saltPassword == md5($this->_salt . $password);
+    }
+
+    protected function _generateSalt() {
+        $s = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        $s = str_shuffle($s);
+        return substr($s, 0, 8);
+    }
+
+    public function getUserCookieHash() {
+        return md5(
+            $_SERVER['REMOTE_ADDR'] .
+            $_SERVER['HTTP_USER_AGENT'] .
+            date('Y-m-d') .
+            $this->_saltPassword .
+            $this->_salt
+        );
+    }
+    public function markUser() {
+        setcookie("user", $this->login . ':' . $this->getUserCookieHash(), time() + 60 * 60 * 24 * 30, '/');
+    }
+
+    public function unMarkUser() {
+        setcookie('user', '', time() - 60*60*24, '/');
+    }
+
+    public static function validatePostData() {
+        if( isset($_POST['login']) && isset($_POST['password']) ) {
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+
+            if (
+                preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+                preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function parseUserCookie() {
+        if( isset($_COOKIE['user']) ) {
+            $userCookie = $_COOKIE['user'];
+            $arUserCookie = explode(':', $userCookie);
+            $login = $arUserCookie[0];
+            $cookieHash = $arUserCookie[1];
+            return array(
+                'login' => $login,
+                'cookieHash' => $cookieHash,
+            );
+        } else {
+            return false;
+        }
+    }
+    public static function isAuth(){
+//        $isAuth = false;
+        if( $arCookie = User::parseUserCookie() ) {
+            $userRepo = new UserRepo();
+            if( $user = $userRepo->getUserByLogin($arCookie['login']) ) {
+                if( $user->validateUserByCookieHash($arCookie['cookieHash']) ) {
+                    return $user->login;
+                }
+            }
+        }
+        else return false;
+    }
+}
+
+class DB {
+    const DB_HOST = 'localhost';
+    const DB_NAME = 'morda_project';
+    const DB_USER = 'root';
+    const DB_PASS = '';
+
+    /**
+     * @return PDO
+     */
+    public static function getConnection() {
+        $host = self::DB_HOST;
+        $name = self::DB_NAME;
+        return new PDO("mysql:host={$host};dbname={$name}", self::DB_USER, self::DB_PASS);
+    }
+
+}
 
 
+
+class UserRepo {
+    const TABLE_NAME = 'user';
+
+    protected $_conn;
+
+    public function __construct() {
+        $this->_conn = DB::getConnection();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllUsers() {
+        $result = array();
+        $q = $this->_conn->query("SELECT * FROM " . self::TABLE_NAME, PDO::FETCH_ASSOC);
+        while( $r = $q->fetch() ) {
+            $result[$r['login']] = new User($r['login'], $r['salt'], $r['saltPassword']);
+
+        }
+        return $result;
+    }
+
+    /**
+     * @param $login
+     * @return bool|User
+     */
+    public function getUserByLogin($login) {
+        $table = self::TABLE_NAME;
+        $sql = "Select * from {$table} where login = :login";
+        $q = $this->_conn->prepare($sql);
+        $q->execute(array(
+            'login' => $login
+        ));
+
+        $r = $q->fetch();
+
+        if( $r ) {
+            return new User($r['login'], $r['salt'], $r['saltpassword']);
+        } else {
+            return false;
+        }
     }
 }
 class City{
@@ -82,8 +222,8 @@ class City{
     public  function getDistanceTo(City $c){
         return DistanceCalculator::getDistance($this->coordinate,$c->coordinate);
     }
+//    public function
 }
-
 class Coordinate{
     public $long;
     public  $lat;
@@ -123,7 +263,7 @@ class DistanceCalculator{
 
         //
         $ad = atan2($y, $x);
-        $dist = (int)(($ad * EARTH_RADIUS)/1000);
+        $dist = (int)(($ad * self::EARTH_RADIUS)/1000);
 return $dist;
     }
 }

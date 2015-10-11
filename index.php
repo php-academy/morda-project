@@ -1,5 +1,6 @@
 <?php
 require(__DIR__ . '/data/project_functions.php');
+require(__DIR__ . '/data/projectclasses.php');
 session_start();
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos = require(__DIR__ . '/data/dbAuto.php');
@@ -16,8 +17,8 @@ $isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
 $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 
 $autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
-$isUserAuth = false;
-$isUserAuth = authCheck();
+$user = false;
+$user = User::isAuth();
 ?>
 <!DOCTYPE html>
 <html>
@@ -89,9 +90,9 @@ $isUserAuth = authCheck();
                 </div>
                 <div class="col-xs-3 ar">
                     <?php
-                    if(!$isUserAuth){?>
+                    if(!User::isAuth()){?>
                     <!-- Not authorized user -->
-                    <form action="/auth.php" method="post">
+                    <form action="/auth.php?action=login" method="post">
                         <fieldset>
                             <div class="form-group form-inline">
                                 <label class="col-sm-4 control-label"> Логин:</label>
@@ -118,7 +119,7 @@ $isUserAuth = authCheck();
                     <!-- Not authorized user -->
                     <?php } else {?>
                     <!-- Authorized user -->
-                    <i class="glyphicon glyphicon-user"><?=substr($_COOKIE['user'],0,strpos($_COOKIE['user'],':'))?></i>
+                    <i class="glyphicon glyphicon-user"><?=$user->login?></i>
                     <br>
                     <a href="/logout.php">Выход</a>
                     <!-- Authorized user -->
