@@ -257,6 +257,21 @@ class User {
         }
         return false;
     }
+
+    public static function parseUserCookie() {
+        if( isset($_COOKIE['user']) ) {
+            $userCookie = $_COOKIE['user'];
+            $arUserCookie = explode(':', $userCookie);
+            $login = $arUserCookie[0];
+            $cookieHash = $arUserCookie[1];
+            return array(
+                'login' => $login,
+                'cookieHash' => $cookieHash,
+            );
+        } else {
+            return false;
+        }
+    }
 }
 
 class DB {
