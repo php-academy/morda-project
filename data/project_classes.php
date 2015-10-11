@@ -193,7 +193,7 @@ class User {
      * @param string $salt
      * @param string $saltPassword
      */
-    public function __construct($login, $salt, $saltPassword) {
+    public function __construct($login = '', $salt = '', $saltPassword= '') {
         $this->login = $login;
         $this->_salt = $salt;
         $this->_saltPassword = $saltPassword;
@@ -233,6 +233,29 @@ class User {
             $this->_saltPassword .
             $this->_salt
         );
+    }
+
+    public function markUser() {
+        setcookie("user", $this->login . ':' . $this->getUserCookieHash(), time() + 60 * 60 * 24 * 30, '/');
+    }
+
+    public function unMarkUser() {
+        setcookie('user', '', time() - 60*60*24, '/');
+    }
+
+    public static function validatePostData() {
+        if( isset($_POST['login']) && isset($_POST['password']) ) {
+            $login = $_POST['login'];
+            $password = $_POST['password'];
+
+            if (
+                preg_match("/^[a-zA-Z0-9]{3,30}$/", $login) &&
+                preg_match("/^[a-zA-Z0-9]{6,30}$/", $password)
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
