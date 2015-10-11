@@ -15,15 +15,7 @@ set_curr_city($currentCity);
 
 $autos = get_autos($currentCity);
 
-$isAuth = false;
-if( $arCookie = User::parseUserCookie() ) {
-    $userRepo = new UserRepo();
-    if( $user = $userRepo->getUserByLogin($arCookie['login']) ) {
-        if( $user->validateUserByCookieHash($arCookie['cookieHash']) ) {
-            $isAuth = true;
-        }
-    }
-}
+$user = User::auth();
 
 ?>
 <!DOCTYPE html>
@@ -89,7 +81,7 @@ if( $arCookie = User::parseUserCookie() ) {
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$isAuth) { ?>
+                    <?php if(!$user) { ?>
                     <!-- Not authorized user -->
                     <form action="/auth.php?action=login" method="post">
                         <fieldset>
