@@ -6,7 +6,7 @@ class City{
     //������ ������ Coordinate
     public $coord;
 
-    function __construct($code,$name,$coord){
+    function __construct($code,$name,Coordinate $coord){
         $this->code=$code;
         $this->name=$name;
         $this->coord=$coord;
@@ -125,12 +125,12 @@ class Auto{
     }
 }
 
-class AutoId{
+class AutoAdd{
     public $auto;
     public $codeCity;
     public $price;
 
-    function __construct(){
+    function __construct(Auto $auto,$codeCity,Price $price){
         $this->auto=$auto;
         $this->codeCity=$codeCity;
         $this->price=$price;
@@ -139,6 +139,7 @@ class AutoId{
 
 class User{
 
+    //$_salt
     public $login;
     protected $salt;
     protected $saltPassword;
@@ -150,15 +151,18 @@ class User{
     }
 
     function init($password){
-        return md5($this->salt.$password);
+        $this->salt = $this->_generateSalt();
+        $this->saltPassword = md5($this->salt . $password);
     }
 
     function validateUserPassword($password){
-        if(init($password)==$this->saltPassword){
-            return true;
-        }
+        return $this->saltPassword == md5($this->salt . $password);
     }
-
+    protected function _generateSalt() {
+        $s = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        $s = str_shuffle($s);
+        return substr($s, 0, 8);
+    }
     function getUserCookieHash(){
         $user_agent=$_SERVER['HTTP_USER_AGENT'];
         $ip=$_SERVER['REMOTE_ADDR'];
@@ -171,6 +175,100 @@ class User{
         if(getUserCookieHash()==$cookieHash){
             return true;
         }
+    }
+}
+
+class DB {
+    const DB_HOST = 'localhost';
+    const DB_NAME = 'morda';
+    const DB_USER = 'root';
+    const DB_PASS = '';
+
+    /**
+     * @return false|PDO
+     */
+    public static function getConnection() {
+        $host = self::DB_HOST;
+        $name = self::DB_NAME;
+
+
+        try {
+            $conn = new PDO("mysql:host={$host};dbname={$name}", self::DB_USER, self::DB_PASS);
+        } catch( Exception $e ) {
+            $conn = false;
+        }
+        return $conn;
+    }
+}
+
+class UserRepo{
+    const TABLE_NAME='user';
+    protected $_conn;
+    public function __construct(){
+        $this->_conn=DB::getConnection();
+    }
+    public function getUserByLogin($login){
+
+        $table=self::TABLE_NAME;
+        $sql="SELECT login FROM {$table} WHERE login=:login";
+        $q=$this->_conn->prepare($sql);
+        $q->execute(array(
+            'login'=>$login;
+        ));
+        $r=$q->fetch();
+        if($r){
+            return new User($r['login'],$r['salt'].$r['saltPassword']);
+        }else{
+            return false;
+        }
+
+    }
+    public function getAllUsers(){
+
+        $q=$this->_conn=query("SELECT * FROM ".self::TABLE_NAME,PDO::FETCH_ASSOC);
+        while($r=$q->fetch()){
+            $result[$r['login']]=new User($r['login'],$r['salt'].$r['saltPassword']);
+        }
+        return $result;
+    }
+}
+
+class CityRepository {
+    const TABLE_NAME = 'city';
+    /**
+     * @var PDO
+     */
+    protected $_conn;
+    public function __construct() {
+        $this->_conn = DB::getConnection();
+    }
+    /**
+     * @return array
+     */
+    public function getCities() {
+        $cities = array();
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->query("SELECT * from {$table}");
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        while( $result = $query->fetch() ) {
+            $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+        }
+        return $cities;
+    }
+    /**
+     * @param string $code
+     * @return bool|City
+     */
+    public function getCityByCode($code) {
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->prepare("SELECT * from {$table} where code=:code");
+        if( $query->execute(array('code' => $code)) ) {
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            if(  $result = $query->fetch() ) {
+                return new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+            }
+        }
+        return false;
     }
 }
 
