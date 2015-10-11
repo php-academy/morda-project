@@ -5,7 +5,7 @@ require(__DIR__ . '/data/project_functions.php');
 require(__DIR__ . '/data/project_classes.php');
 
 $cityRepo = new CityRepository();
-print_r($cityRepo->getCityByCode('krsk'));
+
 
 
 $cities = require(__DIR__.'/data/dbCity.php');
@@ -35,10 +35,10 @@ $login = authorize();
             <div class="row">
                 <div class="btn-group btn-group-justified">
                     <?php
-                    foreach( $cities as $cityData ) {
-                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
+                    foreach( $cityRepo->getCities() as $city ) {
+                        $disabled = $currentCity == $city->code ? 'disabled' : '';
                         ?>
-                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <a href="/?curr_city=<?=$city->code?>" class="btn btn-primary <?=$disabled?>"><?=$city->name?></a>
                         <?php
                     }
                     ?>

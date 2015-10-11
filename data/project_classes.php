@@ -216,10 +216,15 @@ class DB {
     const DB_HOST = 'localhost';
     const DB_NAME = 'morda';
     const DB_USER = 'root';
-    const DB_PASS = ''
+    const DB_PASS = '';
 
+    /**
+     * @return PDO
+     */
     public static function getConnection() {
-        return new PDO("mysql:host={self::DB_HOST};dbname={self::DB_NAME}", self::DB_USER, self::DB_PASS);
+        $host = self::DB_HOST;
+        $name = self::DB_NAME;
+        return new PDO("mysql:host={$host};dbname={$name}", self::DB_USER, self::DB_PASS);
     }
 
 }
@@ -228,16 +233,45 @@ class CityRepository {
 
     const TABLE_NAME = 'city';
 
+    /**
+     * @var PDO
+     */
     protected $_conn;
 
     public function __construct() {
-        $_conn = DB::getConnection();
+        $this->_conn = DB::getConnection();
     }
 
-    public function getCityByCode($code) {
-        $query  = $this->_conn->prepare("SELECT * from {self::TABLE_NAME} where code=:code");
-        $result = $query->execute(array(':code' => $code));
+    /**
+     * @return array
+     */
+    public function getCities() {
+        $cities = array();
 
-        return new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->query("SELECT * from {$table}");
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+
+        while( $result = $query->fetch() ) {
+            $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+        }
+
+        return $cities;
+    }
+
+    /**
+     * @param string $code
+     * @return bool|City
+     */
+    public function getCityByCode($code) {
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->prepare("SELECT * from {$table} where code=:code");
+        if( $query->execute(array('code' => $code)) ) {
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            if(  $result = $query->fetch() ) {
+                return new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+            }
+        }
+        return false;
     }
 }
