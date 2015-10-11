@@ -210,6 +210,34 @@ class User {
             $this->_salt
         );
     }
+}
 
+class DB {
+    const DB_HOST = 'localhost';
+    const DB_NAME = 'morda';
+    const DB_USER = 'root';
+    const DB_PASS = ''
 
+    public static function getConnection() {
+        return new PDO("mysql:host={self::DB_HOST};dbname={self::DB_NAME}", self::DB_USER, self::DB_PASS);
+    }
+
+}
+
+class CityRepository {
+
+    const TABLE_NAME = 'city';
+
+    protected $_conn;
+
+    public function __construct() {
+        $_conn = DB::getConnection();
+    }
+
+    public function getCityByCode($code) {
+        $query  = $this->_conn->prepare("SELECT * from {self::TABLE_NAME} where code=:code");
+        $result = $query->execute(array(':code' => $code));
+
+        return new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+    }
 }
