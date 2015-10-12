@@ -1,9 +1,9 @@
 <?php
 
 class City{
+    const TABLE_NAME = 'city';
     public $code;
     public $name;
-    //������ ������ Coordinate
     public $coord;
 
     function __construct($code,$name,Coordinate $coord){
@@ -12,10 +12,49 @@ class City{
         $this->coord=$coord;
     }
 
+    public static function get_curr_city() {
+        if( isset($_GET['curr_city']) ) {
+            $currentCity = $_GET['curr_city'];
+        } else {
+            if( isset($_COOKIE['curr_city']) ) {
+                $currentCity = $_COOKIE['curr_city'];
+            } else {
+                $currentCity = 'nsk';
+            }
+        }
+        return $currentCity;
+    }
 
-    public function getDistanceTo(City $c){
+    function set_curr_city( $curr_city ) {
+        setcookie('curr_city', $curr_city, time()+ 60*60*24*30, '/');
+    }
+
+    /*public function getDistanceTo(City $c){
         $coord_other=$c->coord;
         return DistanceCalculator::calculateTheDistance ($this->coord,$coord_other);
+    }*/
+
+    public static function distance_cities($dbCity,$currCityCode,$needDistance){
+
+        $ar_city=array();
+
+        foreach($dbCity as $codeCity=>$city){
+            if($currCityCode==$codeCity){
+                $city_coord=$city->coord;
+                break;
+            }
+        }
+        foreach($dbCity as $codeCity=>$city){
+            $coord_other_city=$city->coord;
+
+            $distance=DistanceCalculator::calculateTheDistance($city_coord,$coord_other_city)/1000;
+
+            if($distance<=$needDistance){
+                $ar_city[]=$codeCity;
+                //$ar_city[$codeCity]=$distance;
+            }
+        }
+        return $ar_city;
     }
 
 }
@@ -108,6 +147,7 @@ class Price{
 //echo $price->getPriceString();
 
 class Auto{
+    public $id;
     public $name;
     public $year;
     public $run;
@@ -115,14 +155,76 @@ class Auto{
     public $isAutoTrans;
     public $is4wd;
 
-    function __construct($name,$year,$run,$power,$isAutoTrans,$is4wd){
+    function __construct($name,$year,$run,$power,$isAutoTrans,$is4wd,$id){
+        $this->id=$id;
         $this->name=$name;
         $this->year=$year;
         $this->run=$run;
         $this->power=$power;
         $this->isAutoTrans=$isAutoTrans;
         $this->is4wd=$is4wd;
+        $this->id=$id;
     }
+}
+
+
+class AutoRepo {
+    const TABLE_NAME = 'auto';
+    /**
+     * @var PDO
+     */
+    protected $_conn;
+    public function __construct() {
+        $this->_conn = DB::getConnection();
+    }
+    /**
+     * @return array
+     */
+    public function getAutos() {
+        $autos = array();
+        $table = self::TABLE_NAME;
+        $city=City::TABLE_NAME;
+        $auto_city=AutoCity::TABLE_NAME;
+        $sql="SELECT {$table}.id,{$table}.name,{$table}.year,{$table}.run,{$table}.power,{$table}.isAutoTrans,{$table}.is4wd,{$city}.code
+              FROM {$table} JOIN {$auto_city} ON {$table}.id={$auto_city}.auto_id JOIN {$city} ON {$auto_city}.city_id={$city}.id";
+        //echo $sql;
+        //$query = $this->_conn->query("SELECT * from {$table} WHERE ");
+        $query = $this->_conn->query($sql);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        while( $result = $query->fetch() ) {
+            $autos[][$result['code']] = new Auto($result['name'], $result['year'],$result['run'],$result['power'],$result['isAutoTrans'],$result['is4wd'],$result['id']);
+        }
+        return $autos;
+    }
+
+    public function filter($dbAuto,$dbCity,$currCityCode,$search){
+
+        $ar_auto=array();
+
+        $ar_city=City::distance_cities($dbCity,$currCityCode,$search['distance']);
+        //print_r($ar_city);
+
+        if(!empty($ar_city)){
+            foreach($dbAuto as $auto){
+                foreach($auto as $cityCode=>$auto) {
+                    if (in_array($cityCode, $ar_city)) {
+                        if ($auto->is4wd == $search['wd'] && $auto->isAutoTrans == $search['autotrans']) {
+                            $ar_auto[] = $auto;
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            return false;
+        }
+        if(empty($ar_auto)){
+            return false;
+        }
+        return $ar_auto;
+
+    }
+
 }
 
 class AutoAdd{
@@ -333,7 +435,7 @@ class CityRepository {
         $query = $this->_conn->query("SELECT * from {$table}");
         $query->setFetchMode(PDO::FETCH_ASSOC);
         while( $result = $query->fetch() ) {
-            $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+            $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinate($result['lat'], $result['long']));
         }
         return $cities;
     }
@@ -347,10 +449,14 @@ class CityRepository {
         if( $query->execute(array('code' => $code)) ) {
             $query->setFetchMode(PDO::FETCH_ASSOC);
             if(  $result = $query->fetch() ) {
-                return new City($result['code'], $result['name'], new Coordinates($result['lat'], $result['long']));
+                return new City($result['code'], $result['name'], new Coordinate($result['lat'], $result['long']));
             }
         }
         return false;
     }
 }
 
+class AutoCity{
+    const TABLE_NAME = 'auto_city';
+
+}

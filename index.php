@@ -5,9 +5,9 @@ require(__DIR__ . '/data/project_functions.php');
 require(__DIR__ . '/data/project_classes.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
-$users = require( __DIR__ . '/data/dbusers.php');
+//$users = require( __DIR__ . '/data/dbusers.php');
 
-$currentCity = get_curr_city();
+$currentCity = City::get_curr_city();
 set_curr_city($currentCity);
 
 //POST данные для поиска
@@ -17,10 +17,17 @@ $checked=isChecked($search);
 
 //var_dump($search);
 
-$autos = filter($autos,$cities,$currentCity,$search);
+//$autos = filter($autos,$cities,$currentCity,$search);
 
 //$isUserAuth=isAuth();
+$cities=new CityRepository();
+$cities=$cities->getCities();
 
+$autos=new AutoRepo();
+$auto=$autos->getAutos();
+//print_r($auto);
+
+$autos=$autos->filter($auto,$cities,$currentCity,$search);
 
 $isUserAuth = false;
 $isUserAuth=User::isAuth();
@@ -46,10 +53,10 @@ $isUserAuth=User::isAuth();
             <div class="row">
                 <div class="btn-group btn-group-justified">
                     <?php
-                    foreach( $cities as $cityData ) {
-                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
+                    foreach( $cities as $codeCity=>$cityData ) {
+                        $disabled = $currentCity == $codeCity ? 'disabled' : '';
                         ?>
-                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <a href="/?curr_city=<?=$cityData->code?>" class="btn btn-primary <?=$disabled?>"><?=$cityData->name?></a>
                         <?php
                     }
                     ?>
@@ -137,14 +144,14 @@ $isUserAuth=User::isAuth();
                     </thead>
                     <tbody>
                     <?php
-                    foreach( $autos as $id=>$autoData ) {
+                    foreach( $autos as $autoData ) {
                         ?>
                         <tr>
-                            <td><a href="/auto_detail.php?id=<?=$id?>"><?=$autoData['model']['name']?></a></td>
-                            <td><?=$autoData['model']['year']?></td>
-                            <td><?=$autoData['model']['power']?> л.c.</td>
-                            <td><?=$autoData['model']['run']?></td>
-                            <td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($cities, $autoData['cityCode'])?></td>
+                            <td><a href="/auto_detail.php?id=<?=$autoData->id?>"><?=$autoData->name?></a></td>
+                            <td><?=$autoData->year?></td>
+                            <td><?=$autoData->power?> л.c.</td>
+                            <td><?=$autoData->run?></td>
+                            <td><?=$autoData->value?> руб.<br><?//=get_city_name_by_code($cities, $id)?></td>
                         </tr>
                         <?php
                     }

@@ -46,13 +46,13 @@ function get_city_name_by_code($dbCity, $cityCode) {
 
 function calculateTheDistance ($lat1, $long1, $lat2, $long2) {
 
-    // перевести координаты в радианы
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     $lat1 = $lat1 * M_PI / 180;
     $lat2 = $lat2 * M_PI / 180;
     $long1 = $long1 * M_PI / 180;
     $long2 = $long2 * M_PI / 180;
 
-    // косинусы и синусы широт и разницы долгот
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     $cl1 = cos($lat1);
     $cl2 = cos($lat2);
     $sl1 = sin($lat1);
@@ -61,7 +61,7 @@ function calculateTheDistance ($lat1, $long1, $lat2, $long2) {
     $cdelta = cos($delta);
     $sdelta = sin($delta);
 
-    // вычисления длины большого круга
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     $y = sqrt(pow($cl2 * $sdelta, 2) + pow($cl1 * $sl2 - $sl1 * $cl2 * $cdelta, 2));
     $x = $sl1 * $sl2 + $cl1 * $cl2 * $cdelta;
 
@@ -78,8 +78,8 @@ function filter(array $dbAuto, array $dbCity,$currCityCode,$search){
     $ar_auto=array();
 
     $ar_city=distance_cities($dbCity,$currCityCode,$search['distance']);
-    # насколько я увидел $currCityCode - не попадает в список городов, по которым происходит поиск
-    # нужно искать в текущем и всех остальных, которые удовлетворяют расстоянию
+    # пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ $currCityCode - пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+    # пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     if(!empty($ar_city)){
         foreach($dbAuto as $auto){
             $i++;
@@ -110,16 +110,16 @@ function distance_cities($dbCity,$currCityCode,$needDistance){
     $distance=0;
     $ar_city=array();
 
-    //координаты текущего города
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     foreach($dbCity as $city){
         if($currCityCode==$city['code']){
             $lat_curr=$city['coord']['latitude'];
             $long_curr=$city['coord']['longitude'];
             break;
-            # как только нашли можно остановить обход цикла - break;
+            # пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ - break;
         }
     }
-    //координаты других городов
+    //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     foreach($dbCity as $codeCity=>$city){
         $lat_other_city=$city['coord']['latitude'];
         $long_other_city=$city['coord']['longitude'];
@@ -239,7 +239,7 @@ function getAutoById($id){
 
 function auto_handler(&$auto){
    if($auto['model']['isAutoTrans']==true){
-       $auto['model']['isAutoTrans']='Автомат';
+       $auto['model']['isAutoTrans']='пїЅпїЅпїЅпїЅпїЅпїЅпїЅ';
    }
     if($auto['model']['is4wd']==true){
         $auto['model']['is4wd']='4WD';
