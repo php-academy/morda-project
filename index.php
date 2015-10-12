@@ -22,8 +22,8 @@ $autos = filter($autos,$cities,$currentCity,$search);
 //$isUserAuth=isAuth();
 
 
-$isAuth = false;
-$user=User::isAuth();
+$isUserAuth = false;
+$isUserAuth=User::isAuth();
 
 
 ?>
@@ -91,7 +91,7 @@ $user=User::isAuth();
                     </form>
                 </div>
                 <div class="col-xs-3 ar">
-                    <?php if(!$user){?>
+                    <?php if(!$isUserAuth['user']){?>
                     <!-- Not authorized user -->
                     <form action="/auth.php" method="post">
                         <fieldset>
@@ -119,7 +119,7 @@ $user=User::isAuth();
                     <!-- Not authorized user -->
                     <?php } else {?>
                     <!-- Authorized user -->
-                    <i class="glyphicon glyphicon-user"><?=$user->login?></i>
+                    <i class="glyphicon glyphicon-user"><?=$isUserAuth['user']->login?></i>
                     <br>
                     <a href="/?logout=1">Выход</a>
                     <!-- Authorized user -->

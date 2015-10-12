@@ -10,10 +10,6 @@ require(__DIR__ . '/data/project_classes.php');
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 
-
-if(isset($_POST['login']) && isset($_POST['password'])){
-
-
     if( User::validatePostData() ) {
         $userRepo = new UserRepo();
         $user = $userRepo->getUserByLogin($_POST['login']);
@@ -21,12 +17,13 @@ if(isset($_POST['login']) && isset($_POST['password'])){
             if ( $user->validateUserByPassword($_POST['password']) ) {
                 $user->markUser();
             }else{
-                $_SESSION['error']='Неверный логин или пароль!';
+                User::errorData('invalidPass');
             }
+        }else {
+            User::errorData('invalidLogin');
         }
-    }else{
-        $_SESSION['error']='Введенные данные не корректны!';
+    }else {
+        User::errorData('invalidData');
     }
-}
 
 header('Location: /');
