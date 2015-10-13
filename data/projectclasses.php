@@ -7,32 +7,50 @@
  */
 
 class Auto{
-    public $name;
+    public $id;
+    public $model;
     public $year;
     public $run;
     public $power;
     public $isAutoTrans;
     public $is4wd;
-    function __construct($name, $year, $run, $power, $isAutoTrans, $is4wd){
-        $this->name = $name;
+    function __construct($id, $model, $year, $run, $power, $isAutoTrans, $is4wd){
+        $this->id = $id;
+        $this->model = $model;
         $this->year = $year;
         $this->run = $run;
         $this->power = $power;
         $this->isAutoTrans = $isAutoTrans;
         $this->is4wd = $is4wd;
     }
-
 }
 class AutoAd{
-    public $auto;
+    public $model;
     public $cityCode;
     public $price;
-    function __construct(Auto $auto, $cityCode,Price $price){
-        $this->name = $auto;
-        $this->year = $cityCode;
-        $this->run = $price;
+    function __construct(Auto $model, $cityCode,Price $price){
+        $this->model = $model;
+        $this->cityCode = $cityCode;
+        $this->price = $price;
     }
 }
+class AutoRepo{
+    const TABLE_NAME = 'auto';
+//    protected $_conn;
+    public function __construct(){
+        $this->_conn = DB::getConnection();
+    }
+    public function Autos() {
+        $autos = array();
+        $table = self::TABLE_NAME;
+        $q = $this->_conn->query("SELECT * FROM {$table}", PDO::FETCH_ASSOC);
+        while( $r = $q->fetch() ) {
+            $autos[$r['id']] = new Auto($r['model'], $r['year'],$r['run'], $r['power'], $r['isAutoTrans'], $r['is4wd']);
+        }
+        return $autos;
+    }
+}
+
 class Price{
     public $value;
     public $currancy;
@@ -101,11 +119,11 @@ class User {
         setcookie("user", $this->login . ':' . $this->getUserCookieHash(), time() + 60 * 60 * 24 * 30, '/');
     }
 
-    public function unMarkUser() {
+    public static function logout() {
         setcookie('user', '', time() - 60*60*24, '/');
     }
 
-    public static function validatePostData() {
+    protected static function _validatePostData() {
 
         if( isset($_POST['login']) && isset($_POST['password']) ) {
             $login = $_POST['login'];
@@ -135,12 +153,27 @@ class User {
             return false;
         }
     }
+
     public static function auth(){
         if( $arCookie = User::parseUserCookie() ) {
             $userRepo = new UserRepo();
             if( $user = $userRepo->getUserByLogin($arCookie['login']) ) {
                 if( $user->validateUserByCookieHash($arCookie['cookieHash']) ) {
                     return $user;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static function login() {
+        if( self::_validatePostData() ) {
+            $userRepo = new UserRepo();
+            $user = $userRepo->getUserByLogin($_POST['login']);
+            if ( $user ) {
+                if ( $user->validateUserByPassword($_POST['password']) ) {
+                    $user->markUser();
+                    return true;
                 }
             }
         }
@@ -214,7 +247,6 @@ class City{
     public $code;
     public $name;
     public $coordinate;
-//    public $coordinate;
     function __construct($code,$name,Coordinate $coordinate){
         $this->code = $code;
         $this->name = $name;
@@ -224,15 +256,29 @@ class City{
         return DistanceCalculator::getDistance($this->coordinate,$c->coordinate);
     }
 
-//    public function
+    public static function getCurrentCity(){
+        if( isset($_GET['curr_city']) ) {
+            $currentCity = $_GET['curr_city'];
+        } else {
+            if( isset($_COOKIE['curr_city']) ) {
+                $currentCity = $_COOKIE['curr_city'];
+            } else {
+                $currentCity = 'nsk';
+            }
+        }
+        return $currentCity;
+    }
+    public  static function setCurrentCity($currentCity){
+        setcookie('curr_city', $currentCity, time()+ 60*60*24*30, '/');
+    }
 }
 class CityRepo{
     const TABLE_NAME = 'cities';
-    protected $_conn;
+//    protected $_conn;
     public function __construct() {
         $this->_conn = DB::getConnection();
     }
-    /*
+
     public function getCities() {
         $result = array();
         $table = self::TABLE_NAME;
@@ -243,7 +289,7 @@ class CityRepo{
         }
         return $result;
     }
-    */
+    /*
     public function getCities() {
         $cities = array();
 
@@ -257,6 +303,7 @@ class CityRepo{
 
         return $cities;
     }
+    */
     public function getCityByCode($code){
         $table = self::TABLE_NAME;
         $query = $this->_conn->query("Select * from {$table} where code = {$code}");

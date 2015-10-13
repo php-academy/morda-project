@@ -5,8 +5,8 @@ session_start();
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
-$currentCity = get_curr_city();
-set_curr_city($currentCity);
+$currentCity = City::getCurrentCity();
+City::setCurrentCity($currentCity);
 $cityRepo = new CityRepo();
 
 $dist = (isset($_POST['distance']) && !empty($_POST['distance'])) ? $_POST['distance'] : NULL;
@@ -17,7 +17,7 @@ $year_do = (isset($_POST['year_do']) && !empty($_POST['year_do'])) ? $_POST['yea
 $isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
 $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 
-$autos = filter($autos,$cityRepo->getCities(),$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
+$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
 $user = User::auth();
 ?>
 <!DOCTYPE html>
