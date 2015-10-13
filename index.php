@@ -1,7 +1,8 @@
 <?php
 require(__DIR__ . '/app/core.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
-$autos = require(__DIR__ . '/data/dbAuto.php');
+//$autos = require(__DIR__ . '/data/dbAuto.php');
+$autos = new AutoRepo();
 $users = require(__DIR__ . '/data/dbUsers.php');
 $currentCity = City::getCurrentCity();
 City::setCurrentCity($currentCity);
@@ -15,7 +16,7 @@ $year_do = (isset($_POST['year_do']) && !empty($_POST['year_do'])) ? $_POST['yea
 $isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
 $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 
-$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
+$autos = filter($autos->Autos(),$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
 $user = User::auth();
 ?>
 <!DOCTYPE html>

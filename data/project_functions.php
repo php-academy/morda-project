@@ -66,6 +66,7 @@ function calculateTheDistance ($cities,$currentCity,$cityauto) {
 function filter($dbAuto,$cities,$currentCity,$needDistance,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do){
 $ar_auto = array();
     $i=0;
+//    $c=new City();
     foreach($dbAuto as $dataauto){
 
             if ((!isset($is4wd) || ($dataauto['model']['is4wd'] == $is4wd))
@@ -74,9 +75,9 @@ $ar_auto = array();
                 && (!isset($price_do) || ($dataauto['price']['value'] < ($price_do * 1000)))
                 && (!isset($year_ot) || ($dataauto['model']['year'] >= $year_ot))
                 && (!isset($year_do) || ($dataauto['model']['year'] <= $year_do))
-                && ($needDistance >= calculateTheDistance($cities, $currentCity, $dataauto['cityCode']))
+                && ($needDistance >= City::getDistanceTo($dataauto->citycode))
             ) {
-
+          //      calculateTheDistance($cities, $currentCity, $dataauto['citycode'])
                 $ar_auto[$i] = $dataauto;
             }
         $i++;

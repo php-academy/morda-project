@@ -23,6 +23,8 @@ class CityRepo{
         }
         return $result;
     }
+
+
     /*
     public function getCities() {
         $cities = array();

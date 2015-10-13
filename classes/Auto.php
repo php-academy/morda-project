@@ -14,7 +14,9 @@ class Auto{
     public $power;
     public $isAutoTrans;
     public $is4wd;
-    function __construct($id, $model, $year, $run, $power, $isAutoTrans, $is4wd){
+    public $cityCode;
+    public $price;
+    function __construct($id, $model, $year, $run, $power, $isAutoTrans, $is4wd, $cityCode, Price $price){
         $this->id = $id;
         $this->model = $model;
         $this->year = $year;
@@ -22,5 +24,7 @@ class Auto{
         $this->power = $power;
         $this->isAutoTrans = $isAutoTrans;
         $this->is4wd = $is4wd;
+        $this->cityCode = $cityCode;
+        $this->price = $price;
     }
 }

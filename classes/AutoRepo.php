@@ -17,7 +17,8 @@ class AutoRepo{
         $table = self::TABLE_NAME;
         $q = $this->_conn->query("SELECT * FROM {$table}", PDO::FETCH_ASSOC);
         while( $r = $q->fetch() ) {
-            $autos[$r['id']] = new Auto($r['model'], $r['year'],$r['run'], $r['power'], $r['isAutoTrans'], $r['is4wd']);
+            $autos[$r['id']] = new Auto($r['id'],$r['model'], $r['year'],$r['run'], $r['power'], $r['isAutoTrans'], $r['is4wd'],
+                $r['citycode'], new Price($r['value'], $r['currancy']));
         }
         return $autos;
     }
