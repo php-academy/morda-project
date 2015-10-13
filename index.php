@@ -1,8 +1,6 @@
 <?php
-session_start();
-date_default_timezone_set('America/Los_Angeles');
-require(__DIR__ . '/data/project_functions.php');
-require(__DIR__ . '/data/project_classes.php');
+
+require(__DIR__.'/application/core.php');
 
 $cityRepo = new CityRepo();
 

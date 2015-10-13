@@ -6,19 +6,7 @@
  * Time: 10:01
  */
 
-class Coordinates {
-    public $lat;
-    public $long;
 
-    /**
-     * @param float $lat
-     * @param float $long
-     */
-    public function __construct($lat, $long) {
-        $this->lat = $lat;
-        $this->long = $long;
-    }
-}
 
 class DistanceCalculator {
 
@@ -55,63 +43,6 @@ class DistanceCalculator {
         $dist = $ad * self::EARTH_RADIUS;
 
         return $dist;
-    }
-}
-
-class City {
-    public $code;
-    public $name;
-    public $coord;
-
-    /**
-     * @param string $code
-     * @param string $name
-     * @param Coordinates $coord
-     */
-    public function __construct($code, $name, Coordinates $coord) {
-        $this->code = $code;
-        $this->name = $name;
-        $this->coord = $coord;
-    }
-
-    /**
-     * @param City $c
-     * @return float
-     */
-    public function getDistanceTo(City $c) {
-        return DistanceCalculator::getDistance($this->coord, $c->coord);
-    }
-}
-
-class Price {
-    public $value;
-    public $currency;
-
-    /**
-     * Price constructor.
-     * @param float $value
-     * @param string $currency
-     */
-    public function __construct($value, $currency)
-    {
-        $this->value = $value;
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPriceString() {
-        switch($this->currency) {
-            case 'RUB':
-                return "{$this->value} &#8381;";
-            case 'USD':
-                return "{$this->value} $";
-            case "EUR":
-                return "{$this->value} &euro;";
-            default:
-                return "{$this->value} {$this->currency}";
-        }
     }
 }
 
