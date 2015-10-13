@@ -1,8 +1,18 @@
 <?php
 session_start();
 date_default_timezone_set('America/Los_Angeles');
+
+function __autoload($class_name) {
+    $class_file = "./classes/{$class_name}.php";
+    if( file_exists($class_file) ) {
+        require($class_file);
+    }
+}
+
 require(__DIR__ . '/data/project_functions.php');
-require(__DIR__ . '/data/project_classes.php');
+//require(__DIR__ . '/data/project_classes.php');
+
+
 
 $cityRepo = new CityRepo();
 
@@ -132,9 +142,6 @@ $user = User::auth();
             <br>
             <div class="row bt">
                 <br>
-                <?
-                date_default_timezone_set('America/Los_Angeles');
-                ?>
                 &copy; <?=date('Y'); ?> Morda inc. by nasedkin
             </div>
             <br>
