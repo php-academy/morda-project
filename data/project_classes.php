@@ -12,19 +12,6 @@ class City{
         $this->coord=$coord;
     }
 
-    public static function get_curr_city() {
-        if( isset($_GET['curr_city']) ) {
-            $currentCity = $_GET['curr_city'];
-        } else {
-            if( isset($_COOKIE['curr_city']) ) {
-                $currentCity = $_COOKIE['curr_city'];
-            } else {
-                $currentCity = 'nsk';
-            }
-        }
-        return $currentCity;
-    }
-
     function set_curr_city( $curr_city ) {
         setcookie('curr_city', $curr_city, time()+ 60*60*24*30, '/');
     }
@@ -117,6 +104,7 @@ echo $city1->getDistanceTo($city2);*/
 
 class Price{
 
+    const TABLE_NAME = 'price';
     public $value;
     public $currency;
 
@@ -147,16 +135,15 @@ class Price{
 //echo $price->getPriceString();
 
 class Auto{
-    public $id;
     public $name;
     public $year;
     public $run;
     public $power;
     public $isAutoTrans;
     public $is4wd;
+    public $id;
 
     function __construct($name,$year,$run,$power,$isAutoTrans,$is4wd,$id){
-        $this->id=$id;
         $this->name=$name;
         $this->year=$year;
         $this->run=$run;
@@ -177,40 +164,51 @@ class AutoRepo {
     public function __construct() {
         $this->_conn = DB::getConnection();
     }
-    /**
-     * @return array
-     */
+
     public function getAutos() {
         $autos = array();
         $table = self::TABLE_NAME;
         $city=City::TABLE_NAME;
         $auto_city=AutoCity::TABLE_NAME;
-        $sql="SELECT {$table}.id,{$table}.name,{$table}.year,{$table}.run,{$table}.power,{$table}.isAutoTrans,{$table}.is4wd,{$city}.code
-              FROM {$table} JOIN {$auto_city} ON {$table}.id={$auto_city}.auto_id JOIN {$city} ON {$auto_city}.city_id={$city}.id";
-        //echo $sql;
-        //$query = $this->_conn->query("SELECT * from {$table} WHERE ");
+        $auto_price=AutoPrice::TABLE_NAME;
+        $price=Price::TABLE_NAME;
+
+        /*$sql="SELECT auto.id,auto.name,auto.year,auto.run,auto.power,auto.isAutoTrans,auto.is4wd,city.code,price.value,price.currency FROM auto
+                JOIN auto_city ON auto.id=auto_city.auto_id
+                JOIN city ON auto_city.city_id=city.id
+                JOIN auto_price ON auto.id=auto_price.auto_id
+                JOIN price ON auto_price.price_id=price.id";*/
+
+        $sql="SELECT {$table}.id,{$table}.name,{$table}.year,{$table}.run,{$table}.power,{$table}.isAutoTrans,{$table}.is4wd,{$city}.code,{$price}.value,{$price}.currency
+              FROM {$table}
+              JOIN {$auto_city} ON {$table}.id={$auto_city}.auto_id
+              JOIN {$city} ON {$auto_city}.city_id={$city}.id
+              JOIN {$auto_price} ON {$table}.id={$auto_price}.auto_id
+              JOIN {$price} ON {$auto_price}.price_id={$price}.id";
+
         $query = $this->_conn->query($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         while( $result = $query->fetch() ) {
-            $autos[][$result['code']] = new Auto($result['name'], $result['year'],$result['run'],$result['power'],$result['isAutoTrans'],$result['is4wd'],$result['id']);
+            $auto=new Auto($result['name'], $result['year'],$result['run'],$result['power'],$result['isAutoTrans'],$result['is4wd'],$result['id']);
+            $price=new Price($result['value'],$result['currency']);
+            $autos[] = new AutoAdd($auto,$result['code'],$price);
         }
+        //print_r($autos);
         return $autos;
     }
 
-    public function filter($dbAuto,$dbCity,$currCityCode,$search){
+    public function filter($dbCity,$currCityCode,$search){
 
         $ar_auto=array();
 
+        $dbAuto=$this->getAutos();
         $ar_city=City::distance_cities($dbCity,$currCityCode,$search['distance']);
-        //print_r($ar_city);
 
         if(!empty($ar_city)){
             foreach($dbAuto as $auto){
-                foreach($auto as $cityCode=>$auto) {
-                    if (in_array($cityCode, $ar_city)) {
-                        if ($auto->is4wd == $search['wd'] && $auto->isAutoTrans == $search['autotrans']) {
-                            $ar_auto[] = $auto;
-                        }
+                if (in_array($auto->codeCity, $ar_city)) {
+                    if ($auto->auto->is4wd == $search['wd'] && $auto->auto->isAutoTrans == $search['autotrans']) {
+                        $ar_auto[] = $auto;
                     }
                 }
             }
@@ -458,5 +456,7 @@ class CityRepository {
 
 class AutoCity{
     const TABLE_NAME = 'auto_city';
-
+}
+class AutoPrice{
+    const TABLE_NAME = 'auto_price';
 }

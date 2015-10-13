@@ -7,7 +7,7 @@ $cities = require(__DIR__ . '/data/dbCity.php');
 $autos  = require(__DIR__ . '/data/dbAuto.php');
 //$users = require( __DIR__ . '/data/dbusers.php');
 
-$currentCity = City::get_curr_city();
+$currentCity = get_curr_city();
 set_curr_city($currentCity);
 
 //POST данные для поиска
@@ -24,10 +24,8 @@ $cities=new CityRepository();
 $cities=$cities->getCities();
 
 $autos=new AutoRepo();
-$auto=$autos->getAutos();
-//print_r($auto);
 
-$autos=$autos->filter($auto,$cities,$currentCity,$search);
+$autos=$autos->filter($cities,$currentCity,$search);
 
 $isUserAuth = false;
 $isUserAuth=User::isAuth();
@@ -147,11 +145,11 @@ $isUserAuth=User::isAuth();
                     foreach( $autos as $autoData ) {
                         ?>
                         <tr>
-                            <td><a href="/auto_detail.php?id=<?=$autoData->id?>"><?=$autoData->name?></a></td>
-                            <td><?=$autoData->year?></td>
-                            <td><?=$autoData->power?> л.c.</td>
-                            <td><?=$autoData->run?></td>
-                            <td><?=$autoData->value?> руб.<br><?//=get_city_name_by_code($cities, $id)?></td>
+                            <td><a href="/auto_detail.php?id=<?=$autoData->auto->id?>"><?=$autoData->auto->name?></a></td>
+                            <td><?=$autoData->auto->year?></td>
+                            <td><?=$autoData->auto->power?> л.c.</td>
+                            <td><?=$autoData->auto->run?></td>
+                            <td><?=$autoData->price->value?> руб.<br><?//=get_city_name_by_code($cities, $id)?></td>
                         </tr>
                         <?php
                     }
