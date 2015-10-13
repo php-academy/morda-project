@@ -1,19 +1,5 @@
 <?php
-session_start();
-date_default_timezone_set('America/Los_Angeles');
-
-function __autoload($class_name) {
-    $class_file = "./classes/{$class_name}.php";
-    if( file_exists($class_file) ) {
-        require($class_file);
-    }
-}
-
-require(__DIR__ . '/data/project_functions.php');
-//require(__DIR__ . '/data/project_classes.php');
-
-
-
+require(__DIR__ . '/application/core.php');
 $cityRepo = new CityRepo();
 
 $currentCity = get_curr_city();
