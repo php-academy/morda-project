@@ -21,6 +21,7 @@ class Auto{
         $this->isAutoTrans = $isAutoTrans;
         $this->is4wd = $is4wd;
     }
+
 }
 class AutoAd{
     public $auto;
@@ -105,6 +106,7 @@ class User {
     }
 
     public static function validatePostData() {
+
         if( isset($_POST['login']) && isset($_POST['password']) ) {
             $login = $_POST['login'];
             $password = $_POST['password'];
@@ -133,23 +135,22 @@ class User {
             return false;
         }
     }
-    public static function isAuth(){
-//        $isAuth = false;
+    public static function auth(){
         if( $arCookie = User::parseUserCookie() ) {
             $userRepo = new UserRepo();
             if( $user = $userRepo->getUserByLogin($arCookie['login']) ) {
                 if( $user->validateUserByCookieHash($arCookie['cookieHash']) ) {
-                    return $user->login;
+                    return $user;
                 }
             }
         }
-        else return false;
+        return false;
     }
 }
 
 class DB {
     const DB_HOST = 'localhost';
-    const DB_NAME = 'morda_project';
+    const DB_NAME = 'morda';
     const DB_USER = 'root';
     const DB_PASS = '';
 
@@ -222,7 +223,49 @@ class City{
     public  function getDistanceTo(City $c){
         return DistanceCalculator::getDistance($this->coordinate,$c->coordinate);
     }
+
 //    public function
+}
+class CityRepo{
+    const TABLE_NAME = 'cities';
+    protected $_conn;
+    public function __construct() {
+        $this->_conn = DB::getConnection();
+    }
+    /*
+    public function getCities() {
+        $result = array();
+        $table = self::TABLE_NAME;
+        $q = $this->_conn->query("SELECT * FROM {$table}", PDO::FETCH_ASSOC);
+        while( $r = $q->fetch() ) {
+            $result[$r['code']] = new City($r['code'], $r['name'],new Coordinate($r['lat'], $r['long']));
+
+        }
+        return $result;
+    }
+    */
+    public function getCities() {
+        $cities = array();
+
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->query("SELECT * from {$table}");
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+
+        while( $result = $query->fetch() ) {
+            $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinate($result['lat'], $result['long']));
+        }
+
+        return $cities;
+    }
+    public function getCityByCode($code){
+        $table = self::TABLE_NAME;
+        $query = $this->_conn->query("Select * from {$table} where code = {$code}");
+        if($query->fetch()){
+            $query->setFetchMode(PDO::FETCH_ASSOC);
+            return new City($query['code'], $query['name'], new Coordinate($query['lat'], $query['long']));
+        }
+        else return false;
+    }
 }
 class Coordinate{
     public $long;

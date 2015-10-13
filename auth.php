@@ -6,6 +6,7 @@
  * Time: 20:17
  */
 //print_r($_POST);
+session_start();
 require(__DIR__ . '/data/projectclasses.php');
 require(__DIR__ . '/data/project_functions.php');
 if( isset($_GET['action']) && $_GET['action'] == 'login' ) {

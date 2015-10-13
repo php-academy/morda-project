@@ -7,6 +7,7 @@ $autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
+$cityRepo = new CityRepo();
 
 $dist = (isset($_POST['distance']) && !empty($_POST['distance'])) ? $_POST['distance'] : NULL;
 $price_ot = (isset($_POST['price_ot']) && !empty($_POST['price_ot'])) ? $_POST['price_ot'] : NULL;
@@ -16,9 +17,8 @@ $year_do = (isset($_POST['year_do']) && !empty($_POST['year_do'])) ? $_POST['yea
 $isAutoTrans = (isset($_POST['isAutoTrans'])) ? $_POST['isAutoTrans'] : NULL;
 $is4wd = (isset($_POST['is4wd'])) ? $_POST['is4wd'] : NULL;
 
-$autos = filter($autos,$cities,$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
-$user = false;
-$user = User::isAuth();
+$autos = filter($autos,$cityRepo->getCities(),$currentCity,$dist,$is4wd,$isAutoTrans,$price_ot,$price_do,$year_ot,$year_do);
+$user = User::auth();
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,10 +38,10 @@ $user = User::isAuth();
             <div class="row">
                 <div class="btn-group btn-group-justified">
                     <?php
-                    foreach( $cities as $cityData ) {
-                        $disabled = $currentCity == $cityData['code'] ? 'disabled' : '';
+                    foreach( $cityRepo->getCities() as $cityData ) {
+                        $disabled = $currentCity == $cityData->code ? 'disabled' : '';
                         ?>
-                        <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                        <a href="/?curr_city=<?=$cityData->code?>" class="btn btn-primary <?=$disabled?>"><?=$cityData->name?></a>
                         <?php
                     }
                     ?>
@@ -90,7 +90,7 @@ $user = User::isAuth();
                 </div>
                 <div class="col-xs-3 ar">
                     <?php
-                    if(!User::isAuth()){?>
+                    if(!$user){?>
                     <!-- Not authorized user -->
                     <form action="/auth.php?action=login" method="post">
                         <fieldset>
