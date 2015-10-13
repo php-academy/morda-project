@@ -6,10 +6,6 @@ require(__DIR__ . '/data/project_classes.php');
 
 $cityRepo = new CityRepo();
 
-
-
-$cities = require(__DIR__.'/data/dbCity.php');
-
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
@@ -127,7 +123,7 @@ $user = User::auth();
                     <tbody>
                     <?php
                     foreach( $autos as $autoData ) {
-                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=get_city_name_by_code($autoData['cityCode'])?></td><?php
+                        ?><td><?=$autoData['model']['name']?></td><td><?=$autoData['model']['year']?></td><td><?=$autoData['model']['power']?> л.c.</td><td><?=$autoData['model']['run']?></td><td><?=$autoData['price']['value']?> руб.<br><?=$cityRepo->getCityByCode($autoData['cityCode'])->name?></td><?php
                     }
                     ?>
                     </tbody>

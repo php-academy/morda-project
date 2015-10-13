@@ -25,8 +25,7 @@ function set_curr_city( $curr_city ) {
 
 function get_city_data_by_code($cityCode) {
 
-    $dbCity = require(__DIR__ . '/dbCity.php');
-
+    $dbCity = array();
     foreach( $dbCity as $cityData ) {
         if( $cityData['code'] == $cityCode ) {
             return $cityData;
