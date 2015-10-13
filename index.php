@@ -1,7 +1,5 @@
 <?php
-require(__DIR__ . '/data/project_functions.php');
-require(__DIR__ . '/data/projectclasses.php');
-session_start();
+require(__DIR__ . '/app/core.php');
 $cities = require(__DIR__ . '/data/dbCity.php');
 $autos = require(__DIR__ . '/data/dbAuto.php');
 $users = require(__DIR__ . '/data/dbUsers.php');
