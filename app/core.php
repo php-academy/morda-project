@@ -11,3 +11,4 @@ session_start();
 function __autoload($className){
     require(__DIR__ . "/../classes/{$className}.php");
 }
+// else require(__DIR__ . "/../migrations/{$className}.php");

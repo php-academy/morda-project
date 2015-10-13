@@ -5,6 +5,7 @@
  * Date: 13.10.2015
  * Time: 19:40
  */
+
 class CityRepo{
     const TABLE_NAME = 'cities';
 //    protected $_conn;

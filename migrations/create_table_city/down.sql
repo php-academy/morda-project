@@ -1,1 +1,1 @@
-DROP TABLE 'city';
+DROP TABLE IF EXISTS `city`;
