@@ -20,7 +20,6 @@ class Coordinates {
     }
 }
 
-
 class DistanceCalculator {
 
     const EARTH_RADIUS = 6372795;
@@ -335,8 +334,6 @@ class DB {
     }
 
 }
-//DB::getConnection();
-
 
 class UserRepo {
     const TABLE_NAME = 'user';
@@ -382,11 +379,7 @@ class UserRepo {
     }
 }
 
-
-
-
-
-class CityRepository {
+class CityRepo {
 
     const TABLE_NAME = 'city';
 
