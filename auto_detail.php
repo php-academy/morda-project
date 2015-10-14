@@ -1,7 +1,6 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-require(__DIR__ . '/data/project_functions.php');
-$cities = require(__DIR__ . '/data/dbCity.php');
+require(__DIR__ . '/application/core.php');
+
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
 
@@ -9,11 +8,12 @@ if(isset($_GET['id'])){
     $id=$_GET['id'];
 }
 
-$auto=getAutoById($id);
+$cities=new CityRepository();
+$cities=$cities->getCities();
 
-auto_handler($auto);
+$auto=new AutoRepo();
+$auto=$auto->getAutoById($id);
 
-//print_r($auto);
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,14 +33,10 @@ auto_handler($auto);
     <div class="row">
         <div class="btn-group btn-group-justified">
             <?php
-            foreach( $cities as $cityData ) {
-                if( $currentCity == $cityData['code'] ) {
-                    $disabled = 'disabled';
-                } else {
-                    $disabled = '';
-                }
+            foreach( $cities as $codeCity=>$cityData ) {
+                $disabled = $currentCity == $codeCity ? 'disabled' : '';
                 ?>
-                <a href="/?curr_city=<?=$cityData['code']?>" class="btn btn-primary <?=$disabled?>"><?=$cityData['name']?></a>
+                <a href="/?curr_city=<?=$cityData->code?>" class="btn btn-primary <?=$disabled?>"><?=$cityData->name?></a>
                 <?php
             }
             ?>
@@ -49,22 +45,22 @@ auto_handler($auto);
     <br>
     <div class="row">
         <ol class="breadcrumb">
-            <li><a href="#">Главная</a></li>
-            <li class="active"><?=$auto['model']['name']?></li>
+            <li><a href="#">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</a></li>
+            <li class="active"><?=$auto->auto->name ?></li>
         </ol>
 
-        <div class="col-xs-1"><strong>Модель:</strong></div>
+        <div class="col-xs-1"><strong>пїЅпїЅпїЅпїЅпїЅпїЅ:</strong></div>
         <div class="col-xs-11">
-            <?=$auto['model']['name'].' '.$auto['model']['year']?>г.<br>
-            <?=$auto['model']['run']?><br>
-            <?=$auto['model']['power']?><br>
-            <?=$auto['model']['isAutoTrans']?><br>
-            <?=$auto['model']['is4wd']?>
+            <?=$auto->auto->name.' '.$auto->auto->year?>пїЅ.<br>
+            <?=$auto->auto->run?><br>
+            <?=$auto->auto->power?><br>
+            <?=$auto->auto->isAutoTrans?><br>
+            <?=$auto->auto->is4wd?>
         </div>
 
-        <div class="col-xs-1"><strong>Цена:</strong></div>
+        <div class="col-xs-1"><strong>пїЅпїЅпїЅпїЅ:</strong></div>
         <div class="col-xs-11">
-            <?=$auto['price']['value']?> руб.
+            <?=$auto->price->getPriceString()?>
         </div>
     </div>
     <br>

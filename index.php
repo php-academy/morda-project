@@ -1,11 +1,6 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-session_start();
-require(__DIR__ . '/data/project_functions.php');
-require(__DIR__ . '/data/project_classes.php');
-$cities = require(__DIR__ . '/data/dbCity.php');
-$autos  = require(__DIR__ . '/data/dbAuto.php');
-//$users = require( __DIR__ . '/data/dbusers.php');
+
+require(__DIR__ . '/application/core.php');
 
 $currentCity = get_curr_city();
 set_curr_city($currentCity);
@@ -15,21 +10,13 @@ set_curr_city($currentCity);
 $search=getPostParam();
 $checked=isChecked($search);
 
-//var_dump($search);
-
-//$autos = filter($autos,$cities,$currentCity,$search);
-
-//$isUserAuth=isAuth();
 $cities=new CityRepository();
 $cities=$cities->getCities();
 
-$autos=new AutoRepo();
-
-$autos=$autos->filter($cities,$currentCity,$search);
+$autos=Auto::filter($currentCity,$search);
 
 $isUserAuth = false;
 $isUserAuth=User::isAuth();
-
 
 ?>
 <!DOCTYPE html>
