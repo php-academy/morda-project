@@ -1,0 +1,7 @@
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.html
+
+RewriteEngine on
+RewriteRule ^some_page.php$ /index.php [R=301,L]
+RewriteRule ^ad/([0-9]{4})/([a-z_]+)/$ ad.php?year=$1&code=$2
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+    <input id="format" value="" placeholder="Формат даты"> <input id="get" type="submit" value="Получить">
+    <br>
+    <input id="result" disabled>
+    <script>
+        $('#get').click(function(){
+            $.post("/ajax/get_date.php",{date_format: $('#format').val()},function( data ) {
+                $('#result').val(data);
+            });
+        });
+    </script>
+</body>
+</html>

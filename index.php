@@ -14,9 +14,9 @@ $user = User::auth();
 <html>
     <head>
         <title>Morda</title>
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <meta charset="UTF-8">
         <style>
             .bt { border-top: 1px solid;}
@@ -124,6 +124,22 @@ $user = User::auth();
                     ?>
                     </tbody>
                 </table>
+
+                <form action="/" method="POST">
+                    <input id="count-button" type="submit" name="action" value="Посчитать">
+                    <div id="count-value-2">
+                    </div>
+                </form>
+                <script>
+                    $('#count-button').click(function(){
+                        $.get("/count.php",function( data ) {
+                            $('#count-value-2').text(data);
+                        });
+
+                        return false;
+                    });
+                </script>
+
             </div>
             <br>
             <div class="row bt">

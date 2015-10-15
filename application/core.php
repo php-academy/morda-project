@@ -6,6 +6,7 @@
  * Time: 8:56
  */
 
+ini_set('display_errors',0);
 function __autoload($class_name) {
     $arPath = array(
             __DIR__ . "/../classes",
