@@ -14,7 +14,7 @@ class City{
         $this->name = $name;
         $this->coordinate = $coordinate;
     }
-    public  function getDistanceTo(City $c){
+    public function getDistanceTo(City $c){
         return DistanceCalculator::getDistance($this->coordinate,$c->coordinate);
     }
 

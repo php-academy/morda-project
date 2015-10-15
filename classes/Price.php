@@ -8,20 +8,20 @@
 
 class Price{
     public $value;
-    public $currancy;
-    function __construct($value,$currancy){
-        $this->price = $value;
-        $this->currancy = $currancy;
+    public $currency;
+    function __construct($value,$currency){
+        $this->value = $value;
+        $this->currancy = $currency;
     }
-    function getPriceString(){
-        switch ($this->currancy) {
+    public function getPriceString(){
+        switch ($this->currency) {
             case 'RUB':
                 return "{$this->value} &#8381;";
             case 'EUR':
                 return "{$this->value} &euro;";
             case 'USD':
                 return "{$this->value} $";
-            default: return "{$this->value} {$this->currancy}";
+            default: return "{$this->value} {$this->currency}";
         }
     }
 }
