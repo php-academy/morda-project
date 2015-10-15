@@ -1,21 +1,17 @@
 <?php
 
-class CityRepository {
+class CityRepository extends Repo {
     const TABLE_NAME = 'city';
-    /**
-     * @var PDO
-     */
-    protected $_conn;
+
     public function __construct() {
-        $this->_conn = DB::getConnection();
+        parent::__construct(self::TABLE_NAME);
     }
     /**
      * @return array
      */
     public function getCities() {
         $cities = array();
-        $table = self::TABLE_NAME;
-        $query = $this->_conn->query("SELECT * from {$table}");
+        $query = $this->_conn->query("SELECT * from {$this->table}");
         $query->setFetchMode(PDO::FETCH_ASSOC);
         while( $result = $query->fetch() ) {
             $cities[$result['code']] = new City($result['code'], $result['name'], new Coordinate($result['lat'], $result['long']));

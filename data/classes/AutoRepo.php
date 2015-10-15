@@ -1,34 +1,34 @@
 <?php
 
-class AutoRepo {
+class AutoRepo extends Repo{
+
     const TABLE_NAME = 'auto';
-    /**
-     * @var PDO
-     */
-    protected $_conn;
+    public $city;
+    public $auto;
+    public $auto_price;
+    public $price;
+
     public function __construct() {
-        $this->_conn = DB::getConnection();
+        parent::__construct(self::TABLE_NAME);
+        $this->city=City::TABLE_NAME;
+        $this->auto_city=AutoCity::TABLE_NAME;
+        $this->auto_price=AutoPrice::TABLE_NAME;
+        $this->price=Price::TABLE_NAME;
     }
 
     public function getAutos() {
         $autos = array();
-        $table = self::TABLE_NAME;
-        $city=City::TABLE_NAME;
-        $auto_city=AutoCity::TABLE_NAME;
-        $auto_price=AutoPrice::TABLE_NAME;
-        $price=Price::TABLE_NAME;
-
-        $sql="SELECT {$table}.id,{$table}.name,{$table}.year,{$table}.run,{$table}.power,{$table}.isAutoTrans,{$table}.is4wd,{$city}.code,{$price}.value,{$price}.currency
-              FROM {$table}
-              JOIN {$auto_city} ON {$table}.id={$auto_city}.auto_id
-              JOIN {$city} ON {$auto_city}.city_id={$city}.id
-              JOIN {$auto_price} ON {$table}.id={$auto_price}.auto_id
-              JOIN {$price} ON {$auto_price}.price_id={$price}.id";
+        $sql="SELECT {$this->table}.id,{$this->table}.name,{$this->table}.year,{$this->table}.run,{$this->table}.power,{$this->table}.isAutoTrans,{$this->table}.is4wd,{$this->city}.code,{$this->price}.value,{$this->price}.currency
+              FROM {$this->table}
+              JOIN {$this->auto_city} ON {$this->table}.id={$this->auto_city}.auto_id
+              JOIN {$this->city} ON {$this->auto_city}.city_id={$this->city}.id
+              JOIN {$this->auto_price} ON {$this->table}.id={$this->auto_price}.auto_id
+              JOIN {$this->price} ON {$this->auto_price}.price_id={$this->price}.id";
 
         $query = $this->_conn->query($sql);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         while( $result = $query->fetch() ) {
-            $auto=new Auto($result['name'], $result['year'],$result['run'],$result['power'],$result['isAutoTrans'],$result['is4wd'],$result['id']);
+            $auto=new Auto($result['id'],$result['name'], $result['year'],$result['run'],$result['power'],$result['isAutoTrans'],$result['is4wd']);
             $price=new Price($result['value'],$result['currency']);
             $autos[] = new AutoAdd($auto,$result['code'],$price);
         }
@@ -37,20 +37,14 @@ class AutoRepo {
     }
 
     public function getAutoById($id) {
-        $autos = array();
-        $table = self::TABLE_NAME;
-        $city=City::TABLE_NAME;
-        $auto_city=AutoCity::TABLE_NAME;
-        $auto_price=AutoPrice::TABLE_NAME;
-        $price=Price::TABLE_NAME;
 
-        $sql="SELECT {$table}.id,{$table}.name,{$table}.year,{$table}.run,{$table}.power,{$table}.isAutoTrans,{$table}.is4wd,{$city}.code,{$price}.value,{$price}.currency
-              FROM {$table}
-              JOIN {$auto_city} ON {$table}.id={$auto_city}.auto_id
-              JOIN {$city} ON {$auto_city}.city_id={$city}.id
-              JOIN {$auto_price} ON {$table}.id={$auto_price}.auto_id
-              JOIN {$price} ON {$auto_price}.price_id={$price}.id
-              WHERE {$table}.id=:id";
+        $sql="SELECT {$this->table}.id,{$this->table}.name,{$this->table}.year,{$this->table}.run,{$this->table}.power,{$this->table}.isAutoTrans,{$this->table}.is4wd,{$this->city}.code,{$this->price}.value,{$this->price}.currency
+              FROM {$this->table}
+              JOIN {$this->auto_city} ON {$this->table}.id={$this->auto_city}.auto_id
+              JOIN {$this->city} ON {$this->auto_city}.city_id={$this->city}.id
+              JOIN {$this->auto_price} ON {$this->table}.id={$this->auto_price}.auto_id
+              JOIN {$this->price} ON {$this->auto_price}.price_id={$this->price}.id
+              WHERE {$this->price}.id=:id";
 
         $query = $this->_conn->prepare($sql);
         if( $query->execute(array('id' => $id)) ) {

@@ -9,14 +9,14 @@ class Auto{
     public $is4wd;
     public $id;
 
-    function __construct($name,$year,$run,$power,$isAutoTrans,$is4wd,$id){
+    function __construct($id,$name,$year,$run,$power,$isAutoTrans,$is4wd){
+        $this->id=$id;
         $this->name=$name;
         $this->year=$year;
         $this->run=$run;
         $this->power=$power;
         $this->isAutoTrans=$isAutoTrans;
         $this->is4wd=$is4wd;
-        $this->id=$id;
     }
 
     public static function filter($currCityCode,$search){
@@ -31,7 +31,11 @@ class Auto{
             foreach($dbAuto as $auto){
                 if (in_array($auto->codeCity, $ar_city)) {
                     if ($auto->auto->is4wd == $search['wd'] && $auto->auto->isAutoTrans == $search['autotrans']) {
-                        $ar_auto[] = $auto;
+                        if($auto->price->value>=$search['price1'] && $auto->price->value<=$search['price2']) {
+                            if ($auto->auto->year >= $search['year1'] && $auto->auto->year <= $search['year2']) {
+                                $ar_auto[] = $auto;
+                            }
+                        }
                     }
                 }
             }

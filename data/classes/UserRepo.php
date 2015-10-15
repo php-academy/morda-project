@@ -1,15 +1,15 @@
 <?php
 
-class UserRepo{
+class UserRepo extends Repo{
     const TABLE_NAME='user';
-    protected $_conn;
-    public function __construct(){
-        $this->_conn=DB::getConnection();
+
+    public function __construct() {
+        parent::__construct(self::TABLE_NAME);
     }
+
     public function getUserByLogin($login){
 
-        $table=self::TABLE_NAME;
-        $sql="SELECT * FROM {$table} WHERE login=:login";
+        $sql="SELECT * FROM {$this->table} WHERE login=:login";
         $q=$this->_conn->prepare($sql);
         $q->execute(array(
             'login'=>$login
