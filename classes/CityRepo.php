@@ -7,7 +7,7 @@
  */
 
 class CityRepo{
-    const TABLE_NAME = 'cities';
+    const TABLE_NAME = 'city';
 //    protected $_conn;
     public function __construct() {
         $this->_conn = DB::getConnection();

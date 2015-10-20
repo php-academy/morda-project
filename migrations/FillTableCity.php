@@ -16,6 +16,6 @@ class FillTableCityMigration extends migration{
                                   ('nzsk', '', 53.44, 87.05);");
     }
     public function down(){
-        DB::getConnection()->exec("TRUNCATE TABLE 'city';");
+        DB::getConnection()->exec("TRUNCATE TABLE 'cities';");
     }
 }
