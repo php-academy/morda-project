@@ -6,7 +6,7 @@
  * Time: 20:38
  */
 
-
+/*
 class AutoAd{
     public $model;
     public $cityCode;
@@ -18,7 +18,7 @@ class AutoAd{
     }
 }
 
-
+*/
 
 
 

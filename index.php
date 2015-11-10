@@ -1,9 +1,6 @@
 <?php
 require(__DIR__ . '/app/core.php');
-//$cities = require(__DIR__ . '/data/dbCity.php');
-//$autos = require(__DIR__ . '/data/dbAuto.php');
 $autos = new AutoRepo();
-//$users = require(__DIR__ . '/data/dbUsers.php');
 $currentCity = City::getCurrentCity();
 City::setCurrentCity($currentCity);
 $cityRepo = new CityRepo();
@@ -138,7 +135,7 @@ $user = User::auth();
                     foreach($getautos as $autodata){
                         ?><tr><td><a href=/auto.php?id=<?=$autodata->id?>><?=$autodata->model?></a></td>
                         <td><?=$autodata->year?></td><td><?=$autodata->power?>л.с.</td><td><?=$autodata->run?>км</td>
-                        <td><?=$autodata->price->getPriceString()?>руб.
+                        <td><?=$autodata->price->getPriceString()?>
                             <br><?=$cityRepo->getCityByCode($autodata->cityCode)->name?></td></tr>
                         <?php
                         }

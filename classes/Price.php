@@ -11,7 +11,7 @@ class Price{
     public $currency;
     function __construct($value,$currency){
         $this->value = $value;
-        $this->currancy = $currency;
+        $this->currency = $currency;
     }
     public function getPriceString(){
         switch ($this->currency) {
